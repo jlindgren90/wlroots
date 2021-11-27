@@ -43,24 +43,15 @@ provides=(
 options=(
     'debug'
 )
-source=(
-    "$pkgname-$pkgver.tar.gz::https://gitlab.freedesktop.org/wlroots/wlroots/-/releases/$pkgver/downloads/wlroots-$pkgver.tar.gz"
-    "https://gitlab.freedesktop.org/wlroots/wlroots/-/releases/$pkgver/downloads/wlroots-$pkgver.tar.gz.sig"
-)
-sha256sums=('5b92f11a52d978919ed1306e0d54c9d59f1762b28d44f0a2da3ef3b351305373'
-            'SKIP')
-validpgpkeys=(
-    '34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48' # Simon Ser
-    '9DDA3B9FA5D58DD5392C78E652CB6609B22DA89A' # Drew DeVault
-    '4100929B33EEB0FD1DB852797BC79407090047CA' # Sway signing key
-)
 
 build() {
-    arch-meson "$pkgname-$pkgver" build
+    cd ..
+    arch-meson . build
     ninja -C build
 }
 
 package() {
+    cd ..
     DESTDIR="$pkgdir" ninja -C build install
-    install -Dm644 "$pkgname-$pkgver/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
+    install -Dm644 "LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
 }
