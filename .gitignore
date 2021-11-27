@@ -1,1 +1,4 @@
 /subprojects/
+*.pkg.tar.*
+.cache/
+pkg/
