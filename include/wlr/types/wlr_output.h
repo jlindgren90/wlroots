@@ -532,4 +532,6 @@ enum wl_output_transform wlr_output_transform_invert(
 enum wl_output_transform wlr_output_transform_compose(
 	enum wl_output_transform tr_a, enum wl_output_transform tr_b);
 
+bool wlr_output_is_eglstreams(struct wlr_output *output);
+
 #endif

@@ -216,6 +216,7 @@ struct wlr_backend *wlr_drm_backend_create(struct wl_display *display,
 	drm->dev = dev;
 	drm->fd = dev->fd;
 	drm->name = name;
+	drm->is_eglstreams = drm_is_eglstreams(dev->fd);
 
 	if (parent != NULL) {
 		drm->parent = get_drm_backend_from_backend(parent);

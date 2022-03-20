@@ -11,6 +11,9 @@
 #include <wlr/util/region.h>
 #include <xf86drm.h>
 #include "render/egl.h"
+#include "backend/drm/drm.h"
+#include "render/swapchain.h"
+#include "render/eglstreams_allocator.h"
 
 static enum wlr_log_importance egl_log_importance_to_wlr(EGLint type) {
 	switch (type) {
@@ -266,6 +269,44 @@ static bool egl_init_display(struct wlr_egl *egl, EGLDisplay *display) {
 			"eglQueryDmaBufModifiersEXT");
 	}
 
+	if(egl->is_eglstreams) {
+		load_egl_proc(&egl->procs.eglGetOutputLayersEXT,
+			"eglGetOutputLayersEXT");
+		load_egl_proc(&egl->procs.eglDestroyStreamKHR,
+			"eglDestroyStreamKHR");
+		load_egl_proc(&egl->procs.eglStreamConsumerOutputEXT,
+			"eglStreamConsumerOutputEXT");
+		load_egl_proc(&egl->procs.eglCreateStreamProducerSurfaceKHR,
+			"eglCreateStreamProducerSurfaceKHR");
+		load_egl_proc(&egl->procs.eglStreamConsumerAcquireAttribNV,
+			"eglStreamConsumerAcquireAttribNV");
+		load_egl_proc(&egl->procs.eglQueryStreamKHR,
+			"eglQueryStreamKHR");
+		load_egl_proc(&egl->procs.eglCreateStreamAttribNV,
+			"eglCreateStreamAttribNV");
+		load_egl_proc(&egl->procs.eglStreamFlushNV,
+			"eglStreamFlushNV");
+		load_egl_proc(&egl->procs.eglQueryWaylandBufferWL,
+			"eglQueryWaylandBufferWL");
+
+		EGLint config_attribs[] = {
+			EGL_SURFACE_TYPE, EGL_STREAM_BIT_KHR,
+			EGL_RED_SIZE, 1,
+			EGL_GREEN_SIZE, 1,
+			EGL_BLUE_SIZE, 1,
+			EGL_ALPHA_SIZE, 0,
+			EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+			EGL_CONFIG_CAVEAT, EGL_NONE,
+			EGL_NONE,
+		};
+
+		EGLint egl_num_configs;
+		if (!eglChooseConfig(egl->display, config_attribs,
+				&egl->egl_config, 1, &egl_num_configs) ||
+				egl_num_configs < 1)
+			return false;
+	}
+
 	const char *device_exts_str = NULL, *driver_name = NULL;
 	if (egl->exts.EXT_device_query) {
 		EGLAttrib device_attrib;
@@ -340,8 +381,16 @@ static bool egl_init_display(struct wlr_egl *egl, EGLDisplay *display) {
 
 static bool egl_init(struct wlr_egl *egl, EGLenum platform,
 		void *remote_display) {
+	EGLint attribsDisplay[3] = {EGL_NONE, EGL_NONE, EGL_NONE};
+	if (egl->is_eglstreams) {
+		attribsDisplay[0] = EGL_DRM_MASTER_FD_EXT;
+		attribsDisplay[1] = egl->drm_fd;
+		attribsDisplay[2] = EGL_NONE;
+	}
+
 	EGLDisplay display = egl->procs.eglGetPlatformDisplayEXT(platform,
-		remote_display, NULL);
+		remote_display, attribsDisplay);
+
 	if (display == EGL_NO_DISPLAY) {
 		wlr_log(WLR_ERROR, "Failed to create EGL display");
 		return false;
@@ -371,7 +420,7 @@ static bool egl_init(struct wlr_egl *egl, EGLenum platform,
 	attribs[atti++] = EGL_NONE;
 	assert(atti <= sizeof(attribs)/sizeof(attribs[0]));
 
-	egl->context = eglCreateContext(egl->display, EGL_NO_CONFIG_KHR,
+	egl->context = eglCreateContext(egl->display, egl->egl_config,
 		EGL_NO_CONTEXT, attribs);
 	if (egl->context == EGL_NO_CONTEXT) {
 		wlr_log(WLR_ERROR, "Failed to create EGL context");
@@ -474,6 +523,9 @@ struct wlr_egl *wlr_egl_create_with_drm_fd(int drm_fd) {
 		wlr_log(WLR_ERROR, "Failed to create EGL context");
 		return NULL;
 	}
+
+	egl->is_eglstreams = drm_is_eglstreams(drm_fd);
+	egl->drm_fd = drm_fd;
 
 	if (egl->exts.EXT_platform_device) {
 		/*
@@ -603,8 +655,10 @@ bool wlr_egl_destroy_image(struct wlr_egl *egl, EGLImage image) {
 }
 
 bool wlr_egl_make_current(struct wlr_egl *egl) {
-	if (!eglMakeCurrent(egl->display, EGL_NO_SURFACE, EGL_NO_SURFACE,
-			egl->context)) {
+	EGLSurface surface = egl->current_eglstream ?
+		egl->current_eglstream->surface : EGL_NO_SURFACE;
+
+	if (!eglMakeCurrent(egl->display, surface, surface, egl->context)) {
 		wlr_log(WLR_ERROR, "eglMakeCurrent failed");
 		return false;
 	}
@@ -612,6 +666,7 @@ bool wlr_egl_make_current(struct wlr_egl *egl) {
 }
 
 bool wlr_egl_unset_current(struct wlr_egl *egl) {
+	egl->current_eglstream = NULL;
 	if (!eglMakeCurrent(egl->display, EGL_NO_SURFACE, EGL_NO_SURFACE,
 			EGL_NO_CONTEXT)) {
 		wlr_log(WLR_ERROR, "eglMakeCurrent failed");
@@ -953,4 +1008,103 @@ int wlr_egl_dup_drm_fd(struct wlr_egl *egl) {
 	free(render_name);
 
 	return render_fd;
+}
+
+bool wlr_egl_create_eglstreams_surface(struct wlr_eglstream *egl_stream,
+		uint32_t plane_id, int width, int height) {
+	struct wlr_egl *egl = egl_stream->egl;
+	EGLAttrib layer_attribs[] = {
+		EGL_DRM_PLANE_EXT, plane_id,
+		EGL_NONE
+	};
+	EGLAttrib stream_attribs[] = {
+		EGL_STREAM_FIFO_LENGTH_KHR, 0,
+		EGL_CONSUMER_AUTO_ACQUIRE_EXT, EGL_FALSE,
+		EGL_NONE
+	};
+	EGLint surface_attribs[] = {
+		EGL_WIDTH, width,
+		EGL_HEIGHT, height,
+		EGL_NONE
+	};
+
+	EGLOutputLayerEXT egl_layer;
+	EGLint n_layers = 0;
+	EGLBoolean res = egl->procs.eglGetOutputLayersEXT(egl->display,
+		layer_attribs, &egl_layer, 1, &n_layers);
+	if (!res || !n_layers)
+		return false;
+
+	egl_stream->stream = egl->procs.eglCreateStreamAttribNV(egl->display,
+		stream_attribs);
+	if (!egl_stream->stream || !egl->procs.eglStreamConsumerOutputEXT(
+			egl->display, egl_stream->stream, egl_layer))
+		goto error;
+
+	egl_stream->surface = egl->procs.eglCreateStreamProducerSurfaceKHR(egl->display,
+			egl->egl_config, egl_stream->stream, surface_attribs);
+	if (!egl_stream->surface)
+		goto error;
+
+	return true;
+
+error:
+	wlr_egl_destroy_eglstreams_surface(egl_stream);
+	return false;
+}
+
+void wlr_egl_destroy_eglstreams_surface(struct wlr_eglstream *egl_stream) {
+	struct wlr_egl *egl = egl_stream->egl;
+	if (egl_stream->surface) {
+		eglDestroySurface(egl->display, egl_stream->surface);
+		egl_stream->surface = NULL;
+	}
+	if (egl_stream->stream) {
+		egl->procs.eglDestroyStreamKHR(egl->display,
+			egl_stream->stream);
+		egl_stream->stream = NULL;
+	}
+}
+
+bool wlr_egl_flip_eglstreams_page(struct wlr_output *output) {
+	assert(wlr_output_is_drm(output));
+	struct wlr_drm_connector *conn = (struct wlr_drm_connector *)output;
+	if (!conn->crtc || !conn->crtc->primary || !output->swapchain)
+		return false;
+
+	struct wlr_eglstream_plane *egl_stream_plane =
+		wlr_eglstream_plane_for_id(output->swapchain->allocator,
+			conn->crtc->primary->id);
+	assert(egl_stream_plane);
+	struct wlr_eglstream *egl_stream = &egl_stream_plane->stream;
+	struct wlr_egl *egl = egl_stream->egl;
+
+	EGLAttrib acquire_attribs[] = {
+		EGL_DRM_FLIP_EVENT_DATA_NV, (EGLAttrib)egl_stream->drm,
+		EGL_NONE
+	};
+
+	bool ok = wlr_egl_try_to_acquire_stream(egl, egl_stream->stream,
+		acquire_attribs);
+	egl_stream->busy = !ok && (eglGetError() == EGL_RESOURCE_BUSY_EXT);
+	return true;
+}
+
+bool wlr_egl_try_to_acquire_stream(struct wlr_egl *egl, EGLStreamKHR stream,
+		const EGLAttrib *attrib_list) {
+	const int max_acquire_attempts = 10;
+	int acquire_attempt_num = 0;
+	while (true) {
+		if(egl->procs.eglStreamConsumerAcquireAttribNV(egl->display,
+				stream, attrib_list) == EGL_TRUE)
+			return true;
+
+		EGLint errcode = eglGetError();
+		if (errcode != EGL_RESOURCE_BUSY_EXT && errcode != EGL_NONE)
+			return false;
+		if (acquire_attempt_num++ >= max_acquire_attempts)
+			return false;
+
+		sleep(1);
+	}
 }

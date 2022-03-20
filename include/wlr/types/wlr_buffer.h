@@ -59,6 +59,7 @@ struct wlr_buffer {
 	} events;
 
 	struct wlr_addon_set addons;
+	struct wlr_eglstream *egl_stream;
 };
 
 /**

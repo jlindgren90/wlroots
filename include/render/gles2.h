@@ -67,6 +67,7 @@ struct wlr_gles2_renderer {
 			GLint pos_attrib;
 		} quad;
 		struct wlr_gles2_tex_shader tex_rgba;
+		struct wlr_gles2_tex_shader tex_rgba_invert_y;
 		struct wlr_gles2_tex_shader tex_rgbx;
 		struct wlr_gles2_tex_shader tex_ext;
 	} shaders;
@@ -86,6 +87,7 @@ struct wlr_gles2_buffer {
 	EGLImageKHR image;
 	GLuint rbo;
 	GLuint fbo;
+	GLuint egl_stream_texture;
 
 	struct wlr_addon addon;
 };
