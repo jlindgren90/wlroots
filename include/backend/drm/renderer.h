@@ -7,6 +7,7 @@
 #include <wlr/render/wlr_renderer.h>
 
 struct wlr_drm_backend;
+struct wlr_drm_format;
 struct wlr_drm_plane;
 struct wlr_buffer;
 
@@ -29,6 +30,7 @@ struct wlr_drm_fb {
 	struct wl_list link; // wlr_drm_backend.fbs
 
 	uint32_t id;
+	uint32_t handle;
 };
 
 bool init_drm_renderer(struct wlr_drm_backend *drm,
@@ -37,7 +39,8 @@ void finish_drm_renderer(struct wlr_drm_renderer *renderer);
 
 bool init_drm_surface(struct wlr_drm_surface *surf,
 	struct wlr_drm_renderer *renderer, int width, int height,
-	const struct wlr_drm_format *drm_format);
+	const struct wlr_drm_format *drm_format,
+	const struct wlr_drm_plane *plane);
 
 bool drm_fb_import(struct wlr_drm_fb **fb, struct wlr_drm_backend *drm,
 		struct wlr_buffer *buf, const struct wlr_drm_format_set *formats);

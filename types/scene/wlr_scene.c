@@ -1167,6 +1167,10 @@ static bool scene_output_scanout(struct wlr_scene_output *scene_output) {
 
 	struct wlr_output *output = scene_output->output;
 
+	// direct scanout seems broken for eglstreams
+	if (wlr_output_is_eglstreams(output))
+		return false;
+
 	struct wlr_box viewport_box = { .x = scene_output->x, .y = scene_output->y };
 	wlr_output_effective_resolution(output,
 		&viewport_box.width, &viewport_box.height);

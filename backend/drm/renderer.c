@@ -60,7 +60,8 @@ static void finish_drm_surface(struct wlr_drm_surface *surf) {
 
 bool init_drm_surface(struct wlr_drm_surface *surf,
 		struct wlr_drm_renderer *renderer, int width, int height,
-		const struct wlr_drm_format *drm_format) {
+		const struct wlr_drm_format *drm_format,
+		const struct wlr_drm_plane *plane) {
 	if (surf->swapchain != NULL && surf->swapchain->width == width &&
 			surf->swapchain->height == height) {
 		return true;
@@ -68,8 +69,8 @@ bool init_drm_surface(struct wlr_drm_surface *surf,
 
 	finish_drm_surface(surf);
 
-	surf->swapchain = wlr_swapchain_create(renderer->allocator, width, height,
-			drm_format);
+	surf->swapchain = wlr_swapchain_create(renderer->allocator,
+		width, height, drm_format, (void *)(unsigned long)plane->id);
 	if (surf->swapchain == NULL) {
 		wlr_log(WLR_ERROR, "Failed to create swapchain");
 		return false;
@@ -305,10 +306,36 @@ static void poison_buffer(struct wlr_drm_backend *drm,
 	wlr_log(WLR_DEBUG, "Poisoning buffer");
 }
 
+static bool create_dumb_fb(int drm_fd, uint32_t width, uint32_t height,
+		uint32_t *handle, uint32_t *id) {
+	struct drm_mode_destroy_dumb destroy_request = {0};
+	struct drm_mode_create_dumb create_request = {0};
+	create_request.width = width;
+	create_request.height = height;
+	create_request.bpp = 32;
+	*handle = 0;
+	*id = 0;
+
+	if (drmIoctl(drm_fd, DRM_IOCTL_MODE_CREATE_DUMB, &create_request) < 0)
+		return false;
+
+	uint32_t fd;
+	if (drmModeAddFB(drm_fd, width, height, 24, 32, create_request.pitch,
+			 create_request.handle, &fd)) {
+		destroy_request.handle = create_request.handle;
+		drmIoctl(drm_fd, DRM_IOCTL_MODE_DESTROY_DUMB, &destroy_request);
+		return false;
+	}
+
+	*handle = create_request.handle;
+	*id = fd;
+	return true;
+}
+
 static struct wlr_drm_fb *drm_fb_create(struct wlr_drm_backend *drm,
 		struct wlr_buffer *buf, const struct wlr_drm_format_set *formats) {
 	struct wlr_dmabuf_attributes attribs;
-	if (!wlr_buffer_get_dmabuf(buf, &attribs)) {
+	if (!drm->is_eglstreams && !wlr_buffer_get_dmabuf(buf, &attribs)) {
 		wlr_log(WLR_DEBUG, "Failed to get DMA-BUF from buffer");
 		return NULL;
 	}
@@ -322,6 +349,13 @@ static struct wlr_drm_fb *drm_fb_create(struct wlr_drm_backend *drm,
 	if (!fb) {
 		wlr_log_errno(WLR_ERROR, "Allocation failed");
 		return NULL;
+	}
+
+	if (drm->is_eglstreams) {
+		if (!create_dumb_fb(drm->fd, buf->width, buf->height,
+				&fb->handle, &fb->id))
+			goto error_fb;
+		goto eglstreams_out;
 	}
 
 	if (formats && !wlr_drm_format_set_has(formats, attribs.format,
@@ -359,6 +393,7 @@ static struct wlr_drm_fb *drm_fb_create(struct wlr_drm_backend *drm,
 
 	close_all_bo_handles(drm, handles);
 
+eglstreams_out:
 	fb->backend = drm;
 	fb->wlr_buf = buf;
 
@@ -382,6 +417,11 @@ void drm_fb_destroy(struct wlr_drm_fb *fb) {
 
 	if (drmModeRmFB(drm->fd, fb->id) != 0) {
 		wlr_log(WLR_ERROR, "drmModeRmFB failed");
+	}
+
+	if (fb->backend->is_eglstreams && fb->handle) {
+		struct drm_mode_destroy_dumb destroy_request = {fb->handle};
+		drmIoctl(fb->backend->fd, DRM_IOCTL_MODE_DESTROY_DUMB, &destroy_request);
 	}
 
 	free(fb);

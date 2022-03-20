@@ -54,6 +54,14 @@ static void destroy_buffer(struct wlr_gles2_buffer *buffer) {
 	wlr_egl_save_context(&prev_ctx);
 	wlr_egl_make_current(buffer->renderer->egl);
 
+	if (buffer->buffer->egl_stream) {
+		push_gles2_debug(buffer->renderer);
+		glDeleteFramebuffers(1, &buffer->fbo);
+		glDeleteTextures(1, &buffer->egl_stream_texture);
+		pop_gles2_debug(buffer->renderer);
+		goto eglstreams_out;
+	}
+
 	push_gles2_debug(buffer->renderer);
 
 	glDeleteFramebuffers(1, &buffer->fbo);
@@ -62,7 +70,7 @@ static void destroy_buffer(struct wlr_gles2_buffer *buffer) {
 	pop_gles2_debug(buffer->renderer);
 
 	wlr_egl_destroy_image(buffer->renderer->egl, buffer->image);
-
+eglstreams_out:
 	wlr_egl_restore_context(&prev_ctx);
 
 	free(buffer);
@@ -100,6 +108,29 @@ static struct wlr_gles2_buffer *create_buffer(struct wlr_gles2_renderer *rendere
 	buffer->buffer = wlr_buffer;
 	buffer->renderer = renderer;
 
+	GLenum fb_status;
+	if (buffer->buffer->egl_stream) {
+		assert(buffer->buffer->egl_stream->surface);
+		push_gles2_debug(renderer);
+
+		glGenFramebuffers(1, &buffer->fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, buffer->fbo);
+		glGenTextures(1, &buffer->egl_stream_texture);
+		glBindTexture(GL_TEXTURE_2D, buffer->egl_stream_texture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_BGRA8_EXT, wlr_buffer->width,
+			wlr_buffer->height, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+			GL_TEXTURE_2D, buffer->egl_stream_texture, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		fb_status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		pop_gles2_debug(renderer);
+		goto eglstreams_out;
+	}
+
 	struct wlr_dmabuf_attributes dmabuf = {0};
 	if (!wlr_buffer_get_dmabuf(wlr_buffer, &dmabuf)) {
 		goto error_buffer;
@@ -124,11 +155,12 @@ static struct wlr_gles2_buffer *create_buffer(struct wlr_gles2_renderer *rendere
 	glBindFramebuffer(GL_FRAMEBUFFER, buffer->fbo);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
 		GL_RENDERBUFFER, buffer->rbo);
-	GLenum fb_status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	fb_status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	pop_gles2_debug(renderer);
 
+eglstreams_out:
 	if (fb_status != GL_FRAMEBUFFER_COMPLETE) {
 		wlr_log(WLR_ERROR, "Failed to create FBO");
 		goto error_image;
@@ -172,6 +204,7 @@ static bool gles2_bind_buffer(struct wlr_renderer *wlr_renderer,
 		return true;
 	}
 
+	renderer->egl->current_eglstream = wlr_buffer->egl_stream;
 	wlr_egl_make_current(renderer->egl);
 
 	struct wlr_gles2_buffer *buffer = get_buffer(renderer, wlr_buffer);
@@ -216,8 +249,59 @@ static void gles2_begin(struct wlr_renderer *wlr_renderer, uint32_t width,
 }
 
 static void gles2_end(struct wlr_renderer *wlr_renderer) {
-	gles2_get_renderer_in_context(wlr_renderer);
-	// no-op
+	struct wlr_gles2_renderer *renderer =
+		gles2_get_renderer_in_context(wlr_renderer);
+	if (!renderer->current_buffer || !renderer->current_buffer->egl_stream_texture)
+		return;
+
+	push_gles2_debug(renderer);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, renderer->current_buffer->buffer->width,
+		renderer->current_buffer->buffer->height);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, renderer->current_buffer->egl_stream_texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	float gl_matrix[9];
+	wlr_matrix_identity(gl_matrix);
+
+	struct wlr_gles2_tex_shader *shader =
+		&renderer->shaders.tex_rgba_invert_y;
+	glUseProgram(shader->program);
+	glUniformMatrix3fv(shader->proj, 1, GL_FALSE, gl_matrix);
+	glUniform1i(shader->tex, 0);
+	glUniform1f(shader->alpha, 1.0f);
+
+	const GLfloat egl_verts[] = {
+		1, -1, // top right
+		-1, -1, // top left
+		1, 1, // bottom right
+		-1, 1, // bottom left
+	};
+	const GLfloat texcoord[] = {
+		1, 0, // top right
+		0, 0, // top left
+		1, 1, // bottom right
+		0, 1, // bottom left
+	};
+
+	glVertexAttribPointer(shader->pos_attrib, 2, GL_FLOAT, GL_FALSE, 0, egl_verts);
+	glVertexAttribPointer(shader->tex_attrib, 2, GL_FLOAT, GL_FALSE, 0, texcoord);
+	glEnableVertexAttribArray(shader->pos_attrib);
+	glEnableVertexAttribArray(shader->tex_attrib);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glDisableVertexAttribArray(shader->pos_attrib);
+	glDisableVertexAttribArray(shader->tex_attrib);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glUseProgram(0);
+
+	pop_gles2_debug(renderer);
+
+	if (!renderer->egl->current_eglstream->busy) {
+		eglSwapBuffers(renderer->egl->display,
+			renderer->egl->current_eglstream->surface);
+	}
 }
 
 static void gles2_clear(struct wlr_renderer *wlr_renderer,
@@ -510,6 +594,7 @@ static void gles2_destroy(struct wlr_renderer *wlr_renderer) {
 	push_gles2_debug(renderer);
 	glDeleteProgram(renderer->shaders.quad.program);
 	glDeleteProgram(renderer->shaders.tex_rgba.program);
+	glDeleteProgram(renderer->shaders.tex_rgba_invert_y.program);
 	glDeleteProgram(renderer->shaders.tex_rgbx.program);
 	glDeleteProgram(renderer->shaders.tex_ext.program);
 	pop_gles2_debug(renderer);
@@ -675,6 +760,7 @@ static void load_gl_proc(void *proc_ptr, const char *name) {
 extern const GLchar quad_vertex_src[];
 extern const GLchar quad_fragment_src[];
 extern const GLchar tex_vertex_src[];
+extern const GLchar tex_vertex_invert_y_src[];
 extern const GLchar tex_fragment_src_rgba[];
 extern const GLchar tex_fragment_src_rgbx[];
 extern const GLchar tex_fragment_src_external[];
@@ -809,6 +895,17 @@ struct wlr_renderer *wlr_gles2_renderer_create(struct wlr_egl *egl) {
 	renderer->shaders.tex_rgba.alpha = glGetUniformLocation(prog, "alpha");
 	renderer->shaders.tex_rgba.pos_attrib = glGetAttribLocation(prog, "pos");
 	renderer->shaders.tex_rgba.tex_attrib = glGetAttribLocation(prog, "texcoord");
+
+	renderer->shaders.tex_rgba_invert_y.program = prog =
+		link_program(renderer, tex_vertex_invert_y_src, tex_fragment_src_rgba);
+	if (!renderer->shaders.tex_rgba_invert_y.program) {
+		goto error;
+	}
+	renderer->shaders.tex_rgba_invert_y.proj = glGetUniformLocation(prog, "proj");
+	renderer->shaders.tex_rgba_invert_y.tex = glGetUniformLocation(prog, "tex");
+	renderer->shaders.tex_rgba_invert_y.alpha = glGetUniformLocation(prog, "alpha");
+	renderer->shaders.tex_rgba_invert_y.pos_attrib = glGetAttribLocation(prog, "pos");
+	renderer->shaders.tex_rgba_invert_y.tex_attrib = glGetAttribLocation(prog, "texcoord");
 
 	renderer->shaders.tex_rgbx.program = prog =
 		link_program(renderer, tex_vertex_src, tex_fragment_src_rgbx);

@@ -27,6 +27,7 @@
 #include "backend/drm/util.h"
 #include "render/pixel_format.h"
 #include "render/drm_format_set.h"
+#include "render/egl.h"
 #include "render/swapchain.h"
 #include "render/wlr_renderer.h"
 #include "util/signal.h"
@@ -331,7 +332,12 @@ static bool drm_crtc_commit(struct wlr_drm_connector *conn,
 
 	struct wlr_drm_backend *drm = conn->backend;
 	struct wlr_drm_crtc *crtc = conn->crtc;
-	bool ok = drm->iface->crtc_commit(conn, state, flags, test_only);
+
+	bool ok = (drm->is_eglstreams && !state->modeset) ? true :
+		drm->iface->crtc_commit(conn, state, flags, test_only);
+	if (drm->is_eglstreams && (flags & DRM_MODE_PAGE_FLIP_EVENT))
+		wlr_egl_flip_eglstreams_page(&conn->output);
+
 	if (ok && !test_only) {
 		drm_fb_move(&crtc->primary->queued_fb, &crtc->primary->pending_fb);
 		if (crtc->cursor != NULL) {
@@ -434,7 +440,7 @@ static bool drm_connector_set_pending_fb(struct wlr_drm_connector *conn,
 
 		// TODO: fallback to modifier-less buffer allocation
 		bool ok = init_drm_surface(&plane->mgpu_surf, &drm->mgpu_renderer,
-			state->buffer->width, state->buffer->height, format);
+			state->buffer->width, state->buffer->height, format, plane);
 		free(format);
 		if (!ok) {
 			return false;
@@ -824,7 +830,7 @@ static bool drm_connector_set_cursor(struct wlr_output *output,
 			}
 
 			bool ok = init_drm_surface(&plane->mgpu_surf, &drm->mgpu_renderer,
-				buffer->width, buffer->height, format);
+				buffer->width, buffer->height, format, plane);
 			free(format);
 			if (!ok) {
 				return false;
@@ -1682,4 +1688,18 @@ void drm_lease_destroy(struct wlr_drm_lease *lease) {
 	}
 
 	free(lease);
+}
+
+bool drm_is_eglstreams(int drm_fd) {
+	drmVersion *version = drmGetVersion(drm_fd);
+	if (!version)
+		return false;
+	bool is_eglstreams = !strcmp(version->name, "nvidia-drm");
+	drmFreeVersion(version);
+	return is_eglstreams;
+}
+
+bool wlr_output_is_eglstreams(struct wlr_output *output) {
+	return wlr_output_is_drm(output) &&
+		((struct wlr_drm_backend *)output->backend)->is_eglstreams;
 }
