@@ -1250,7 +1250,9 @@ void scan_drm_connectors(struct wlr_drm_backend *drm,
 				}
 			}
 		} else {
-			wlr_conn->crtc = NULL;
+			// FIXME: this can cause unexpected CRTC
+			// reassignments when switching VTs
+			// wlr_conn->crtc = NULL;
 		}
 
 		// This can only happen *after* hotplug, since we haven't read the
