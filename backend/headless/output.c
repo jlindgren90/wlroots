@@ -5,7 +5,6 @@
 #include <wlr/types/wlr_output_layer.h>
 #include <wlr/util/log.h>
 #include "backend/headless.h"
-#include "types/wlr_output.h"
 
 static const uint32_t SUPPORTED_OUTPUT_STATE =
 	WLR_OUTPUT_STATE_BACKEND_OPTIONAL |
@@ -66,7 +65,7 @@ static bool output_commit(struct wlr_output *wlr_output,
 		output_update_refresh(output, state->custom_mode.refresh);
 	}
 
-	if (output_pending_enabled(wlr_output, state)) {
+	if (state->committed & WLR_OUTPUT_STATE_BUFFER) {
 		struct wlr_output_event_present present_event = {
 			.commit_seq = wlr_output->commit_seq + 1,
 			.presented = true,
