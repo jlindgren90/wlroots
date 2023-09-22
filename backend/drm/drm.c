@@ -766,10 +766,15 @@ bool drm_connector_commit_state(struct wlr_drm_connector *conn,
 		}
 	}
 
+	uint32_t flags = 0;
 	if (pending.base->committed & WLR_OUTPUT_STATE_BUFFER) {
 		if (!drm_connector_state_update_primary_fb(conn, &pending)) {
 			goto out;
 		}
+		flags |= DRM_MODE_PAGE_FLIP_EVENT;
+	}
+	if (pending.modeset && pending.active) {
+		flags |= DRM_MODE_PAGE_FLIP_EVENT;
 	}
 	if (pending.base->committed & WLR_OUTPUT_STATE_LAYERS) {
 		if (!drm_connector_set_pending_layer_fbs(conn, pending.base)) {
@@ -797,10 +802,6 @@ bool drm_connector_commit_state(struct wlr_drm_connector *conn,
 		goto out;
 	}
 
-	uint32_t flags = 0;
-	if (pending.active) {
-		flags |= DRM_MODE_PAGE_FLIP_EVENT;
-	}
 	if (pending.base->tearing_page_flip) {
 		flags |= DRM_MODE_PAGE_FLIP_ASYNC;
 	}
