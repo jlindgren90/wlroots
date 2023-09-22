@@ -558,7 +558,7 @@ static bool output_commit(struct wlr_output *wlr_output,
 		return false;
 	}
 
-	if (output_pending_enabled(wlr_output, state)) {
+	if (state->committed & (WLR_OUTPUT_STATE_BUFFER | WLR_OUTPUT_STATE_LAYERS)) {
 		if (output->frame_callback != NULL) {
 			wl_callback_destroy(output->frame_callback);
 		}

@@ -587,14 +587,6 @@ void output_pending_resolution(struct wlr_output *output,
 	}
 }
 
-bool output_pending_enabled(struct wlr_output *output,
-		const struct wlr_output_state *state) {
-	if (state->committed & WLR_OUTPUT_STATE_ENABLED) {
-		return state->enabled;
-	}
-	return output->enabled;
-}
-
 /**
  * Compare a struct wlr_output_state with the current state of a struct
  * wlr_output.
@@ -824,7 +816,7 @@ bool wlr_output_commit_state(struct wlr_output *output,
 
 	output->commit_seq++;
 
-	if (output_pending_enabled(output, state)) {
+	if (state->committed & WLR_OUTPUT_STATE_BUFFER) {
 		output->frame_pending = true;
 		output->needs_frame = false;
 	}

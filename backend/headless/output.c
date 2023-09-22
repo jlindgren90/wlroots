@@ -66,7 +66,7 @@ static bool output_commit(struct wlr_output *wlr_output,
 		output_update_refresh(output, state->custom_mode.refresh);
 	}
 
-	if (output_pending_enabled(wlr_output, state)) {
+	if (state->committed & WLR_OUTPUT_STATE_BUFFER) {
 		struct wlr_output_event_present present_event = {
 			.commit_seq = wlr_output->commit_seq + 1,
 			.presented = true,
