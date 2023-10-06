@@ -159,6 +159,7 @@ struct wlr_xwayland_surface {
 		struct wl_signal set_strut_partial;
 		struct wl_signal set_override_redirect;
 		struct wl_signal set_geometry;
+		struct wl_signal focus_in;
 		struct wl_signal ping_timeout;
 	} events;
 
@@ -247,6 +248,19 @@ bool wlr_surface_is_xwayland_surface(struct wlr_surface *surface);
  */
 struct wlr_xwayland_surface *wlr_xwayland_surface_from_wlr_surface(
 	struct wlr_surface *surface);
+
+/**
+ * Offer focus by sending WM_TAKE_FOCUS to a client window supporting it.
+ * The client may accept or ignore the offer. If it accepts, the surface will
+ * emit a focus_in signal notifying the compositor that it has received focus.
+ * The compositor should then call wlr_xwayland_surface_activate(surface, true).
+ *
+ * This is a more compatible method of giving focus to windows using the
+ * Globally Active input model (see wlr_xwayland_icccm_input_model()) than
+ * calling wlr_xwayland_surface_activate() unconditionally, since there is no
+ * reliable way to know in advance whether these windows want to be focused.
+ */
+void wlr_xwayland_surface_offer_focus(struct wlr_xwayland_surface *xsurface);
 
 void wlr_xwayland_surface_ping(struct wlr_xwayland_surface *surface);
 
