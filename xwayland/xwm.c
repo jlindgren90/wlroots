@@ -301,7 +301,6 @@ static void xwm_set_focus_window(struct wlr_xwm *xwm,
 	xwm->offered_focus = xsurface;
 
 	if (xsurface == unfocus_surface && !force) {
-		wlr_log(WLR_ERROR, "surface is already focused");
 		return;
 	}
 
@@ -310,7 +309,6 @@ static void xwm_set_focus_window(struct wlr_xwm *xwm,
 	}
 
 	if (!xsurface) {
-		wlr_log(WLR_ERROR, "setting focus to none");
 		xcb_set_input_focus_checked(xwm->xcb_conn,
 			XCB_INPUT_FOCUS_POINTER_ROOT,
 			XCB_NONE, XCB_CURRENT_TIME);
@@ -318,17 +316,14 @@ static void xwm_set_focus_window(struct wlr_xwm *xwm,
 	}
 
 	if (xsurface->override_redirect) {
-		wlr_log(WLR_ERROR, "can't focus override-redirect surface");
+		wlr_log(WLR_ERROR, "Cannot focus override-redirect surface");
 		return;
 	}
 
 	if (xsurface == last_offered_surface) {
-		wlr_log(WLR_ERROR, "surface has focused itself");
 		xsurface_set_net_wm_state(xsurface);
 		return;
 	}
-
-	wlr_log(WLR_ERROR, "setting focus to surface [%s]", xsurface->title);
 
 	xcb_client_message_data_t message_data = { 0 };
 	message_data.data32[0] = xwm->atoms[WM_TAKE_FOCUS];
@@ -352,11 +347,9 @@ static void xwm_set_focus_window(struct wlr_xwm *xwm,
 void wlr_xwayland_surface_offer_focus(struct wlr_xwayland_surface *xsurface) {
 	if (xsurface->override_redirect || !xwm_atoms_contains(xsurface->xwm,
 			xsurface->protocols, xsurface->protocols_len, WM_TAKE_FOCUS)) {
-		wlr_log(WLR_ERROR, "invalid surface for focus offer");
+		wlr_log(WLR_ERROR, "Surface does not support WM_TAKE_FOCUS");
 		return;
 	}
-
-	wlr_log(WLR_ERROR, "offering focus to surface [%s]", xsurface->title);
 
 	struct wlr_xwm *xwm = xsurface->xwm;
 	xwm->offered_focus = xsurface;
@@ -1601,12 +1594,10 @@ static void xwm_handle_focus_in(struct wlr_xwm *xwm,
 			(xwm->focus_surface && requested_focus &&
 			requested_focus->pid == xwm->focus_surface->pid &&
 			validate_focus_serial(xwm->last_focus_seq, ev->sequence))) {
-		wlr_log(WLR_ERROR, "accepted focus_in for surface [%s]",
-			requested_focus->title);
 		xwm_set_focus_window(xwm, requested_focus, /*force*/ false);
 		wl_signal_emit_mutable(&requested_focus->events.focus_in, NULL);
 	} else {
-		wlr_log(WLR_ERROR, "rejected focus_in for surface [%s]",
+		wlr_log(WLR_ERROR, "Rejected focus-in for surface [%s]",
 			requested_focus ? requested_focus->title : "NULL");
 		xwm_set_focus_window(xwm, xwm->focus_surface, /*force*/ true);
 	}
