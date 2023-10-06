@@ -184,6 +184,7 @@ static struct wlr_xwayland_surface *xwayland_surface_create(
 	wl_signal_init(&surface->events.set_override_redirect);
 	wl_signal_init(&surface->events.ping_timeout);
 	wl_signal_init(&surface->events.set_geometry);
+	wl_signal_init(&surface->events.focus_in);
 
 	xcb_get_geometry_reply_t *geometry_reply =
 		xcb_get_geometry_reply(xwm->xcb_conn, geometry_cookie, NULL);
@@ -290,12 +291,18 @@ static void xwm_set_net_client_list_stacking(struct wlr_xwm *xwm) {
 static void xsurface_set_net_wm_state(struct wlr_xwayland_surface *xsurface);
 
 static void xwm_set_focus_window(struct wlr_xwm *xwm,
-		struct wlr_xwayland_surface *xsurface) {
+		struct wlr_xwayland_surface *xsurface, bool force) {
 	struct wlr_xwayland_surface *unfocus_surface = xwm->focus_surface;
+	struct wlr_xwayland_surface *last_offered_surface = xwm->offered_focus;
 
-	// We handle cases where focus_surface == xsurface because we
-	// want to be able to deny FocusIn events.
 	xwm->focus_surface = xsurface;
+	xwm->offered_focus = xsurface;
+
+	// When force=true, we handle cases where focus_surface == xsurface
+	// because we want to be able to deny FocusIn events.
+	if (xsurface == unfocus_surface && !force) {
+		return;
+	}
 
 	if (unfocus_surface) {
 		xsurface_set_net_wm_state(unfocus_surface);
@@ -309,6 +316,14 @@ static void xwm_set_focus_window(struct wlr_xwm *xwm,
 	}
 
 	if (xsurface->override_redirect) {
+		wlr_log(WLR_ERROR, "Cannot focus override-redirect surface");
+		return;
+	}
+
+	if (xsurface == last_offered_surface) {
+		// We received FocusIn for a surface that we previously
+		// sent WM_TAKE_FOCUS to. Don't send it again.
+		xsurface_set_net_wm_state(xsurface);
 		return;
 	}
 
@@ -331,12 +346,38 @@ static void xwm_set_focus_window(struct wlr_xwm *xwm,
 	xsurface_set_net_wm_state(xsurface);
 }
 
-static void xwm_surface_activate(struct wlr_xwm *xwm,
-		struct wlr_xwayland_surface *xsurface) {
-	if (xwm->focus_surface == xsurface ||
-			(xsurface && xsurface->override_redirect)) {
+void wlr_xwayland_surface_offer_focus(struct wlr_xwayland_surface *xsurface) {
+	if (xsurface->override_redirect) {
+		wlr_log(WLR_ERROR, "Cannot focus override-redirect surface");
 		return;
 	}
+
+	struct wlr_xwm *xwm = xsurface->xwm;
+	if (!xwm_atoms_contains(xwm, xsurface->protocols,
+			xsurface->protocols_len, WM_TAKE_FOCUS)) {
+		wlr_log(WLR_ERROR, "Surface does not support WM_TAKE_FOCUS");
+		return;
+	}
+
+	xwm->offered_focus = xsurface;
+
+	xcb_client_message_data_t message_data = { 0 };
+	message_data.data32[0] = xwm->atoms[WM_TAKE_FOCUS];
+	message_data.data32[1] = XCB_TIME_CURRENT_TIME;
+	xwm_send_wm_message(xsurface, &message_data, XCB_EVENT_MASK_NO_EVENT);
+	xcb_flush(xwm->xcb_conn);
+}
+
+static void xwm_surface_activate(struct wlr_xwm *xwm,
+		struct wlr_xwayland_surface *xsurface) {
+	if (xsurface && xsurface->override_redirect) {
+		wlr_log(WLR_ERROR, "Cannot activate override-redirect surface");
+		return;
+	}
+	// Note that this function may be called from the focus_in event
+	// after wlr_xwayland_surface_offer_focus(). In that case, the
+	// surface is already focused (xwm->focus_surface == xsurface)
+	// but we still need to set _NET_ACTIVE_WINDOW.
 
 	if (xsurface) {
 		xwm_set_net_active_window(xwm, xsurface->window_id);
@@ -344,7 +385,7 @@ static void xwm_surface_activate(struct wlr_xwm *xwm,
 		xwm_set_net_active_window(xwm, XCB_WINDOW_NONE);
 	}
 
-	xwm_set_focus_window(xwm, xsurface);
+	xwm_set_focus_window(xwm, xsurface, /*force*/ false);
 
 	xcb_flush(xwm->xcb_conn);
 }
@@ -419,6 +460,9 @@ static void xwayland_surface_destroy(struct wlr_xwayland_surface *xsurface) {
 
 	if (xsurface == xsurface->xwm->focus_surface) {
 		xwm_surface_activate(xsurface->xwm, NULL);
+	}
+	if (xsurface == xsurface->xwm->offered_focus) {
+		xsurface->xwm->offered_focus = NULL;
 	}
 
 	wl_list_remove(&xsurface->link);
@@ -1563,12 +1607,16 @@ static void xwm_handle_focus_in(struct wlr_xwm *xwm,
 	// though, because otherwise it may lead to race conditions:
 	// https://github.com/swaywm/wlroots/issues/2324
 	struct wlr_xwayland_surface *requested_focus = lookup_surface(xwm, ev->event);
-	if (xwm->focus_surface && requested_focus &&
+	if ((xwm->offered_focus && requested_focus == xwm->offered_focus) ||
+			(xwm->focus_surface && requested_focus &&
 			requested_focus->pid == xwm->focus_surface->pid &&
-			validate_focus_serial(xwm->last_focus_seq, ev->sequence)) {
-		xwm_set_focus_window(xwm, requested_focus);
+			validate_focus_serial(xwm->last_focus_seq, ev->sequence))) {
+		xwm_set_focus_window(xwm, requested_focus, /*force*/ false);
+		wl_signal_emit_mutable(&requested_focus->events.focus_in, NULL);
 	} else {
-		xwm_set_focus_window(xwm, xwm->focus_surface);
+		wlr_log(WLR_DEBUG, "Rejected focus-in for surface [%s]",
+			requested_focus ? requested_focus->title : "none");
+		xwm_set_focus_window(xwm, xwm->focus_surface, /*force*/ true);
 	}
 }
 
