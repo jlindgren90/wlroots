@@ -8,6 +8,9 @@ project(
 		'c_std=c11',
 		'warning_level=2',
 		'werror=true',
+		# jlindgren: added default_options for labwc
+		'default_library=static',
+		'examples=false',
 	],
 )
 
