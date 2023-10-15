@@ -8,6 +8,9 @@ project(
 		'c_std=' + (meson.version().version_compare('>=1.3.0') ? 'c23,c11' : 'c11'),
 		'warning_level=2',
 		'werror=true',
+		# jlindgren: added default_options for labwc
+		'default_library=static',
+		'examples=false',
 	],
 )
 
