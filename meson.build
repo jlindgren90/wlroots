@@ -9,6 +9,9 @@ project(
 		'warning_level=2',
 		'werror=true',
 		'wrap_mode=nodownload',
+		# jlindgren: added default_options for labwc
+		'default_library=static',
+		'examples=false',
 	],
 )
 
