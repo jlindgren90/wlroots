@@ -169,6 +169,8 @@ struct wlr_xwayland_surface {
 		struct wl_signal set_strut_partial;
 		struct wl_signal set_override_redirect;
 		struct wl_signal set_geometry;
+		/* can be used to set initial maximized/fullscreen geometry */
+		struct wl_signal about_to_map;
 		struct wl_signal focus_in;
 		struct wl_signal ping_timeout;
 	} events;

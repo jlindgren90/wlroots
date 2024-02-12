@@ -183,9 +183,10 @@ static struct wlr_xwayland_surface *xwayland_surface_create(
 	wl_signal_init(&surface->events.set_decorations);
 	wl_signal_init(&surface->events.set_strut_partial);
 	wl_signal_init(&surface->events.set_override_redirect);
-	wl_signal_init(&surface->events.ping_timeout);
 	wl_signal_init(&surface->events.set_geometry);
+	wl_signal_init(&surface->events.about_to_map);
 	wl_signal_init(&surface->events.focus_in);
+	wl_signal_init(&surface->events.ping_timeout);
 
 	xcb_get_geometry_reply_t *geometry_reply =
 		xcb_get_geometry_reply(xwm->xcb_conn, geometry_cookie, NULL);
@@ -1142,6 +1143,7 @@ static void xwm_handle_map_request(struct wlr_xwm *xwm,
 
 	wlr_xwayland_surface_set_withdrawn(xsurface, false);
 	wlr_xwayland_surface_restack(xsurface, NULL, XCB_STACK_MODE_BELOW);
+	wl_signal_emit_mutable(&xsurface->events.about_to_map, NULL);
 	xcb_map_window(xwm->xcb_conn, ev->window);
 }
 
