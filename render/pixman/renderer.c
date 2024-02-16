@@ -472,9 +472,7 @@ static bool pixman_read_pixels(struct wlr_renderer *wlr_renderer,
 		return false;
 	}
 
-	const struct wlr_pixel_format_info *drm_fmt =
-		drm_get_pixel_format_info(drm_format);
-	assert(drm_fmt);
+	assert(drm_get_pixel_format_info(drm_format));
 
 	pixman_image_t *dst = pixman_image_create_bits_no_clear(fmt, width, height,
 			data, stride);
