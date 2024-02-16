@@ -270,8 +270,7 @@ static void frame_handle_output_commit(struct wl_listener *listener,
 		wl_container_of(listener, frame, output_commit);
 	struct wlr_output_event_commit *event = data;
 	struct wlr_output *output = frame->output;
-	struct wlr_renderer *renderer = output->renderer;
-	assert(renderer);
+	assert(output->renderer);
 
 	if (!(event->state->committed & WLR_OUTPUT_STATE_BUFFER)) {
 		return;
@@ -522,8 +521,7 @@ static void capture_output(struct wl_client *wl_client,
 		goto error;
 	}
 
-	struct wlr_renderer *renderer = output->renderer;
-	assert(renderer);
+	assert(output->renderer);
 
 	frame->shm_format = wlr_output_preferred_read_format(frame->output);
 	if (frame->shm_format == DRM_FORMAT_INVALID) {
