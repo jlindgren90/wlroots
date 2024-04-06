@@ -67,8 +67,8 @@ static float color_to_linear(float non_linear) {
 		non_linear / 12.92;
 }
 
-static float color_to_linear_premult(float non_linear, float alpha) {
-	return (alpha == 0) ? 0 : color_to_linear(non_linear / alpha) * alpha;
+static float color_to_linear_premult(float non_linear, float old_alpha, float new_alpha) {
+	return (old_alpha == 0) ? 0 : color_to_linear(non_linear / old_alpha) * new_alpha;
 }
 
 static void mat3_to_mat4(const float mat3[9], float mat4[4][4]) {
@@ -1469,6 +1469,11 @@ static void vulkan_clear(struct wlr_renderer *wlr_renderer,
 		return;
 	}
 
+	// Alpha is adjusted for linear blend (see README-alpha-blend).
+	float v = (color[0] + color[1] + color[2]) / 3;
+	float old_a = color[3];
+	float new_a = ((v - 0.5f) * old_a * old_a + old_a) / (v + 0.5f);
+
 	VkClearAttachment att = {
 		.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
 		.colorAttachment = 0u,
@@ -1479,10 +1484,10 @@ static void vulkan_clear(struct wlr_renderer *wlr_renderer,
 		// But in other parts of wlroots we just always assume
 		// srgb so that's why we have to convert here.
 		.clearValue.color.float32 = {
-			color_to_linear_premult(color[0], color[3]),
-			color_to_linear_premult(color[1], color[3]),
-			color_to_linear_premult(color[2], color[3]),
-			color[3], // no conversion for alpha
+			color_to_linear_premult(color[0], old_a, new_a),
+			color_to_linear_premult(color[1], old_a, new_a),
+			color_to_linear_premult(color[2], old_a, new_a),
+			new_a,
 		},
 	};
 
@@ -1556,11 +1561,16 @@ static void vulkan_render_quad_with_matrix(struct wlr_renderer *wlr_renderer,
 	// does the conversion for out SRGB render targets).
 	// But in other parts of wlroots we just always assume
 	// srgb so that's why we have to convert here.
+	// Alpha is adjusted for linear blend (see README-alpha-blend).
+	float v = (color[0] + color[1] + color[2]) / 3;
+	float old_a = color[3];
+	float new_a = ((v - 0.5f) * old_a * old_a + old_a) / (v + 0.5f);
+
 	float linear_color[4];
-	linear_color[0] = color_to_linear_premult(color[0], color[3]);
-	linear_color[1] = color_to_linear_premult(color[1], color[3]);
-	linear_color[2] = color_to_linear_premult(color[2], color[3]);
-	linear_color[3] = color[3]; // no conversion for alpha
+	linear_color[0] = color_to_linear_premult(color[0], old_a, new_a);
+	linear_color[1] = color_to_linear_premult(color[1], old_a, new_a);
+	linear_color[2] = color_to_linear_premult(color[2], old_a, new_a);
+	linear_color[3] = new_a;
 
 	vkCmdPushConstants(cb, pipe->layout->vk,
 		VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(vert_pcr_data), &vert_pcr_data);
