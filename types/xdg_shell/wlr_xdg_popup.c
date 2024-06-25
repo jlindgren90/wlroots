@@ -107,11 +107,25 @@ static const struct wlr_pointer_grab_interface xdg_pointer_grab_impl = {
 static void xdg_keyboard_grab_enter(struct wlr_seat_keyboard_grab *grab,
 		struct wlr_surface *surface, const uint32_t keycodes[], size_t num_keycodes,
 		const struct wlr_keyboard_modifiers *modifiers) {
-	// keyboard focus should remain on the popup
+	// keyboard focus should remain on the popup (if focused)
+	struct wlr_xdg_popup_grab *xdg_grab = grab->data;
+	struct wlr_seat_client *focused_client =
+		grab->seat->keyboard_state.focused_client;
+	if (!focused_client || focused_client->client != xdg_grab->client) {
+		// same as default_keyboard_enter if not focused
+		wlr_seat_keyboard_enter(grab->seat, surface, keycodes, num_keycodes, modifiers);
+	}
 }
 
 static void xdg_keyboard_grab_clear_focus(struct wlr_seat_keyboard_grab *grab) {
-	// keyboard focus should remain on the popup
+	// keyboard focus should remain on the popup (if focused)
+	struct wlr_xdg_popup_grab *xdg_grab = grab->data;
+	struct wlr_seat_client *focused_client =
+		grab->seat->keyboard_state.focused_client;
+	if (!focused_client || focused_client->client != xdg_grab->client) {
+		// same as default_keyboard_clear_focus if not focused
+		wlr_seat_keyboard_clear_focus(grab->seat);
+	}
 }
 
 static void xdg_keyboard_grab_key(struct wlr_seat_keyboard_grab *grab, uint32_t time,
