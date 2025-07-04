@@ -5,6 +5,10 @@
 #include <wlr/render/color.h>
 #include <wlr/util/addon.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum wlr_color_transform_type {
 	COLOR_TRANSFORM_SRGB,
 	COLOR_TRANSFORM_LUT_3D,
@@ -61,5 +65,9 @@ void wlr_color_primaries_to_xyz(const struct wlr_color_primaries *primaries, flo
  */
 void wlr_color_transfer_function_get_default_luminance(enum wlr_color_transfer_function tf,
 	struct wlr_color_luminances *lum);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

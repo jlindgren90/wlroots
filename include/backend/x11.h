@@ -23,6 +23,10 @@
 #include <xcb/xcb_errors.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define XCB_EVENT_RESPONSE_TYPE_MASK 0x7f
 
 struct wlr_x11_backend;
@@ -143,5 +147,9 @@ void handle_x11_configure_notify(struct wlr_x11_output *output,
 	xcb_configure_notify_event_t *event);
 void handle_x11_present_event(struct wlr_x11_backend *x11,
 	xcb_ge_generic_event_t *event);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

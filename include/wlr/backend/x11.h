@@ -8,6 +8,10 @@
 #include <wlr/backend.h>
 #include <wlr/types/wlr_output.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_input_device;
 
 /**
@@ -47,5 +51,9 @@ bool wlr_output_is_x11(struct wlr_output *output);
  * Sets the title of a struct wlr_output which is an X11 window.
  */
 void wlr_x11_output_set_title(struct wlr_output *output, const char *title);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

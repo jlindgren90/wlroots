@@ -7,6 +7,10 @@
 #include <wlr/render/wlr_renderer.h>
 #include <wlr/util/addon.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_drm_backend;
 struct wlr_drm_format;
 struct wlr_drm_plane;
@@ -40,5 +44,9 @@ struct wlr_buffer *drm_surface_blit(struct wlr_drm_surface *surf,
 
 bool drm_plane_pick_render_format(struct wlr_drm_plane *plane,
 	struct wlr_drm_format *fmt, struct wlr_drm_renderer *renderer);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

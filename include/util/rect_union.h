@@ -6,6 +6,10 @@
 #include <pixman.h>
 #include <wayland-util.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * `struct rect_union` is a data structure to efficiently accumulate a number
  * of rectangles and then, when needed, compute a disjoint cover of their union.
@@ -72,5 +76,9 @@ void rect_union_add(struct rect_union *r, pixman_box32_t box);
  * Best case time: O(t), if rectangles are disjoint and have y-x band structure
  */
 const pixman_region32_t *rect_union_evaluate(struct rect_union *r);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

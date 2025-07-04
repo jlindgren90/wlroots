@@ -11,6 +11,10 @@
 
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Implementation for the viewporter protocol.
  *
@@ -35,5 +39,9 @@ struct wlr_viewporter {
 };
 
 struct wlr_viewporter *wlr_viewporter_create(struct wl_display *display);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

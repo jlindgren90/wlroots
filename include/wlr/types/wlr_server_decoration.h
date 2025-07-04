@@ -16,6 +16,10 @@
 
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Possible values to use in request_mode and the event mode. Same as
  * org_kde_kwin_server_decoration_manager_mode.
@@ -84,5 +88,9 @@ struct wlr_server_decoration_manager *wlr_server_decoration_manager_create(
 	struct wl_display *display);
 void wlr_server_decoration_manager_set_default_mode(
 	struct wlr_server_decoration_manager *manager, uint32_t default_mode);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

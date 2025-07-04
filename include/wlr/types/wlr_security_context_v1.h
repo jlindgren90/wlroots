@@ -11,6 +11,10 @@
 
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * An implementation of the security context protocol.
  *
@@ -51,5 +55,9 @@ struct wlr_security_context_manager_v1 *wlr_security_context_manager_v1_create(
 	struct wl_display *display);
 const struct wlr_security_context_v1_state *wlr_security_context_manager_v1_lookup_client(
 	struct wlr_security_context_manager_v1 *manager, const struct wl_client *client);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

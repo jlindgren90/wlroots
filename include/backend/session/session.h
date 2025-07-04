@@ -3,6 +3,10 @@
 
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wl_display;
 struct wlr_session;
 
@@ -16,5 +20,9 @@ void session_init(struct wlr_session *session);
 
 struct wlr_device *session_open_if_kms(struct wlr_session *restrict session,
 	const char *restrict path);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

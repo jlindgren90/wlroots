@@ -12,6 +12,10 @@
 #include <wlr/backend.h>
 #include <wlr/types/wlr_output.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Creates a headless backend. A headless backend has no outputs or inputs by
  * default.
@@ -27,5 +31,9 @@ struct wlr_output *wlr_headless_add_output(struct wlr_backend *backend,
 
 bool wlr_backend_is_headless(struct wlr_backend *backend);
 bool wlr_output_is_headless(struct wlr_output *output);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

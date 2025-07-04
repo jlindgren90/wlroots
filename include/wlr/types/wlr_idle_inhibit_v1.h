@@ -11,6 +11,10 @@
 
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* This interface permits clients to inhibit the idle behavior such as
  * screenblanking, locking, and screensaving.
  *
@@ -57,5 +61,9 @@ struct wlr_idle_inhibitor_v1 {
 };
 
 struct wlr_idle_inhibit_manager_v1 *wlr_idle_inhibit_v1_create(struct wl_display *display);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

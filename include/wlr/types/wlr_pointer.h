@@ -14,6 +14,10 @@
 #include <wayland-server-protocol.h>
 #include <wlr/types/wlr_input_device.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define WLR_POINTER_BUTTONS_CAP 16
 
 struct wlr_pointer_impl;
@@ -148,5 +152,9 @@ struct wlr_pointer_hold_end_event {
  */
 struct wlr_pointer *wlr_pointer_from_input_device(
 	struct wlr_input_device *input_device);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -11,6 +11,10 @@
 
 #include <wlr/backend.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Creates a multi-backend. Multi-backends wrap an arbitrary number of backends
  * and aggregate their new_output/new_input signals.
@@ -31,5 +35,9 @@ bool wlr_multi_is_empty(struct wlr_backend *backend);
 
 void wlr_multi_for_each_backend(struct wlr_backend *backend,
 		void (*callback)(struct wlr_backend *backend, void *data), void *data);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

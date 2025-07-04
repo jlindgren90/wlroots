@@ -11,6 +11,10 @@
 
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * This protocol specifies a set of interfaces used for making clients able to
  * receive relative pointer events not obstructed by barriers (such as the
@@ -78,5 +82,9 @@ void wlr_relative_pointer_manager_v1_send_relative_motion(
  */
 struct wlr_relative_pointer_v1 *wlr_relative_pointer_v1_from_resource(
 	struct wl_resource *resource);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -5,6 +5,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * These types contain the property ids for several DRM objects.
  * For more details, see:
@@ -76,5 +80,9 @@ char *get_drm_prop_enum(int fd, uint32_t obj, uint32_t prop);
 
 bool introspect_drm_prop_range(int fd, uint32_t prop_id,
 	uint64_t *min, uint64_t *max);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

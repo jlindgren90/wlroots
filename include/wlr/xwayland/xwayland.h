@@ -16,6 +16,10 @@
 #include <xcb/xcb_icccm.h>
 #include <wlr/util/addon.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_box;
 struct wlr_xwm;
 struct wlr_data_source;
@@ -412,5 +416,9 @@ void wlr_xwayland_set_workareas(struct wlr_xwayland *wlr_xwayland,
  */
 xcb_connection_t *wlr_xwayland_get_xwm_connection(
 	struct wlr_xwayland *wlr_xwayland);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

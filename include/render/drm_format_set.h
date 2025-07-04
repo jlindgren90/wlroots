@@ -3,6 +3,10 @@
 
 #include <wlr/render/drm_format_set.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void wlr_drm_format_init(struct wlr_drm_format *fmt, uint32_t format);
 bool wlr_drm_format_has(const struct wlr_drm_format *fmt, uint64_t modifier);
 bool wlr_drm_format_add(struct wlr_drm_format *fmt, uint64_t modifier);
@@ -19,5 +23,9 @@ bool wlr_drm_format_intersect(struct wlr_drm_format *dst,
 	const struct wlr_drm_format *a, const struct wlr_drm_format *b);
 
 bool wlr_drm_format_set_copy(struct wlr_drm_format_set *dst, const struct wlr_drm_format_set *src);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

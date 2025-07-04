@@ -13,6 +13,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** A single DRM format, with a set of modifiers attached. */
 struct wlr_drm_format {
 	// The actual DRM format, from `drm_fourcc.h`
@@ -97,4 +101,9 @@ bool wlr_drm_format_set_intersect(struct wlr_drm_format_set *dst,
  */
 bool wlr_drm_format_set_union(struct wlr_drm_format_set *dst,
 	const struct wlr_drm_format_set *a, const struct wlr_drm_format_set *b);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

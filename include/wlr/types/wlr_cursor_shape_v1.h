@@ -12,6 +12,10 @@
 #include <wayland-server-core.h>
 #include "cursor-shape-v1-protocol.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Manager for the cursor-shape-v1 protocol.
  *
@@ -56,5 +60,9 @@ struct wlr_cursor_shape_manager_v1 *wlr_cursor_shape_manager_v1_create(
  * The name can be used to load a cursor from an XCursor theme.
  */
 const char *wlr_cursor_shape_v1_name(enum wp_cursor_shape_device_v1_shape shape);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

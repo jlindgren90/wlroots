@@ -13,6 +13,10 @@
 #include <wayland-server-core.h>
 #include <wlr/render/drm_format_set.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * A screen capture source.
  *
@@ -90,5 +94,9 @@ struct wlr_ext_image_capture_source_v1 *wlr_ext_image_capture_source_v1_from_res
 
 struct wlr_ext_output_image_capture_source_manager_v1 *wlr_ext_output_image_capture_source_manager_v1_create(
 	struct wl_display *display, uint32_t version);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

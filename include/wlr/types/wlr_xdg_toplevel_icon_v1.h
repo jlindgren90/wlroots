@@ -13,6 +13,10 @@
 
 #include <wlr/util/addon.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_xdg_toplevel_icon_manager_v1 {
 	struct wl_global *global;
 
@@ -76,5 +80,9 @@ struct wlr_xdg_toplevel_icon_v1 *wlr_xdg_toplevel_icon_v1_ref(
  * Unreference an icon. When the icon reference count reaches 0, it is destroyed.
  */
 void wlr_xdg_toplevel_icon_v1_unref(struct wlr_xdg_toplevel_icon_v1 *icon);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

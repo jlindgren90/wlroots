@@ -14,6 +14,10 @@
 #include <wlr/util/box.h>
 #include <wlr/util/addon.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * An output layer.
  *
@@ -99,5 +103,9 @@ struct wlr_output_layer *wlr_output_layer_create(struct wlr_output *output);
  * Destroy an output layer.
  */
 void wlr_output_layer_destroy(struct wlr_output_layer *layer);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

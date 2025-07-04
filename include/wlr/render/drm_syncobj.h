@@ -6,6 +6,10 @@
 #include <wayland-server-core.h>
 #include <wlr/util/addon.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * A synchronization timeline.
  *
@@ -126,5 +130,9 @@ int wlr_drm_syncobj_timeline_export_sync_file(struct wlr_drm_syncobj_timeline *t
  */
 bool wlr_drm_syncobj_timeline_import_sync_file(struct wlr_drm_syncobj_timeline *timeline,
 	uint64_t dst_point, int sync_file_fd);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

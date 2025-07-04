@@ -28,6 +28,10 @@
 #include <wlr/util/addon.h>
 #include <wlr/util/box.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_output;
 struct wlr_output_layout;
 struct wlr_output_layout_output;
@@ -688,5 +692,9 @@ void wlr_scene_layer_surface_v1_configure(
  */
 struct wlr_scene_tree *wlr_scene_drag_icon_create(
 	struct wlr_scene_tree *parent, struct wlr_drag_icon *drag_icon);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

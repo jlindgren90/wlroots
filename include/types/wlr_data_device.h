@@ -4,6 +4,10 @@
 #include <wayland-server-core.h>
 #include <wlr/types/wlr_data_device.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define DATA_DEVICE_ALL_ACTIONS (WL_DATA_DEVICE_MANAGER_DND_ACTION_COPY | \
 	WL_DATA_DEVICE_MANAGER_DND_ACTION_MOVE | \
 	WL_DATA_DEVICE_MANAGER_DND_ACTION_ASK)
@@ -39,5 +43,9 @@ struct wlr_seat_client *seat_client_from_data_device_resource(
  * client does not have a wl_data_device for the seat nothing will be done.
  */
 void seat_client_send_selection(struct wlr_seat_client *seat_client);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

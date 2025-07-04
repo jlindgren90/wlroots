@@ -15,6 +15,10 @@
 #include "backend/drm/properties.h"
 #include "backend/drm/renderer.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_drm_viewport {
 	struct wlr_fbox src_box;
 	struct wlr_box dst_box;
@@ -250,6 +254,10 @@ struct wlr_drm_layer *get_drm_layer(struct wlr_drm_backend *drm,
 #define wlr_drm_conn_log_errno(conn, verb, fmt, ...) \
 	wlr_log_errno(verb, "connector %s: " fmt, conn->name, ##__VA_ARGS__)
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

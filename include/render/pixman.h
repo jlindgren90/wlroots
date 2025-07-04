@@ -7,6 +7,10 @@
 #include <wlr/render/wlr_renderer.h>
 #include "render/pixel_format.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_pixman_pixel_format {
 	uint32_t drm_format;
 	pixman_format_code_t pixman_format;
@@ -60,5 +64,9 @@ bool begin_pixman_data_ptr_access(struct wlr_buffer *buffer, pixman_image_t **im
 
 struct wlr_pixman_render_pass *begin_pixman_render_pass(
 	struct wlr_pixman_buffer *buffer);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

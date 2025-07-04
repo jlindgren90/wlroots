@@ -11,6 +11,10 @@
 
 #include <wlr/types/wlr_pointer.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_pointer_impl {
 	const char *name;
 };
@@ -21,5 +25,9 @@ void wlr_pointer_finish(struct wlr_pointer *pointer);
 
 void wlr_pointer_notify_button(struct wlr_pointer *pointer,
 		struct wlr_pointer_button_event *event);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

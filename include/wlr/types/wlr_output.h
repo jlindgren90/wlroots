@@ -19,6 +19,10 @@
 #include <wlr/util/addon.h>
 #include <wlr/util/box.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum wlr_output_mode_aspect_ratio {
 	WLR_OUTPUT_MODE_ASPECT_RATIO_NONE,
 	WLR_OUTPUT_MODE_ASPECT_RATIO_4_3,
@@ -629,5 +633,9 @@ bool wlr_output_configure_primary_swapchain(struct wlr_output *output,
  */
 struct wlr_render_pass *wlr_output_begin_render_pass(struct wlr_output *output,
 	struct wlr_output_state *state, struct wlr_buffer_pass_options *render_options);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

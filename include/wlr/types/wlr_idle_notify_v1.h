@@ -11,6 +11,10 @@
 
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_seat;
 
 /**
@@ -50,5 +54,9 @@ void wlr_idle_notifier_v1_set_inhibited(struct wlr_idle_notifier_v1 *notifier,
  */
 void wlr_idle_notifier_v1_notify_activity(struct wlr_idle_notifier_v1 *notifier,
 	struct wlr_seat *seat);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

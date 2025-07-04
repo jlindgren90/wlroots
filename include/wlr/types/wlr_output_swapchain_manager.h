@@ -11,6 +11,10 @@
 
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_backend;
 struct wlr_backend_output_state;
 struct wlr_output;
@@ -87,5 +91,9 @@ void wlr_output_swapchain_manager_apply(struct wlr_output_swapchain_manager *man
  * Cleanup resources allocated by the manager.
  */
 void wlr_output_swapchain_manager_finish(struct wlr_output_swapchain_manager *manager);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

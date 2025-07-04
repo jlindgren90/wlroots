@@ -5,6 +5,10 @@
 #include <wlr/types/wlr_xdg_shell.h>
 #include "xdg-shell-protocol.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void create_xdg_surface(struct wlr_xdg_client *client, struct wlr_surface *wlr_surface,
 	uint32_t id);
 void destroy_xdg_surface(struct wlr_xdg_surface *surface);
@@ -35,5 +39,9 @@ struct wlr_xdg_toplevel_configure *send_xdg_toplevel_configure(
 	struct wlr_xdg_toplevel *toplevel);
 void handle_xdg_toplevel_ack_configure(struct wlr_xdg_toplevel *toplevel,
 	struct wlr_xdg_toplevel_configure *configure);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

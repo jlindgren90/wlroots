@@ -26,6 +26,10 @@
 #include <wlr/render/dmabuf.h>
 #include <wlr/render/drm_format_set.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_egl;
 
 /**
@@ -52,5 +56,9 @@ EGLDisplay wlr_egl_get_display(struct wlr_egl *egl);
  * operations.
  */
 EGLContext wlr_egl_get_context(struct wlr_egl *egl);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

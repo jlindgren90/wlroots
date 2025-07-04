@@ -28,6 +28,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 static const uint32_t cursor_data[] = {
 	0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0x00000000, 0x00000000,
 	0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
@@ -568,3 +572,7 @@ static const struct cursor_metadata {
 	{ "pointer", 13, 16, 12, 0, 2544 },
 	{ "wait", 16, 16, 15, 9, 2752 },
 };
+
+#ifdef __cplusplus
+}
+#endif

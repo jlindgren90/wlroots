@@ -12,6 +12,10 @@
 #include <wayland-server-core.h>
 #include <wlr/types/wlr_seat.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_surface;
 
 struct wlr_pointer_gestures_v1 {
@@ -80,5 +84,9 @@ void wlr_pointer_gestures_v1_send_hold_end(
 	struct wlr_seat *seat,
 	uint32_t time_msec,
 	bool cancelled);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

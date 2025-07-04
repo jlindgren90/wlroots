@@ -11,6 +11,10 @@
 
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_renderer;
 
 /**
@@ -49,5 +53,9 @@ struct wlr_shm *wlr_shm_create(struct wl_display *display, uint32_t version,
  */
 struct wlr_shm *wlr_shm_create_with_renderer(struct wl_display *display,
 	uint32_t version, struct wlr_renderer *renderer);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

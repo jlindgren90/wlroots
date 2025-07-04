@@ -5,6 +5,10 @@
 #include <wlr/render/dmabuf.h>
 #include <wlr/types/wlr_buffer.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_drm_dumb_buffer {
 	struct wlr_buffer base;
 	struct wl_list link; // wlr_drm_dumb_allocator.buffers
@@ -33,5 +37,9 @@ struct wlr_drm_dumb_allocator {
  * Does not take ownership over the FD.
  */
 struct wlr_allocator *wlr_drm_dumb_allocator_create(int fd);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
