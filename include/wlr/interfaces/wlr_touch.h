@@ -11,6 +11,10 @@
 
 #include <wlr/types/wlr_touch.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_touch_impl {
 	const char *name;
 };
@@ -18,5 +22,9 @@ struct wlr_touch_impl {
 void wlr_touch_init(struct wlr_touch *touch,
 	const struct wlr_touch_impl *impl, const char *name);
 void wlr_touch_finish(struct wlr_touch *touch);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

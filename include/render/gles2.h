@@ -16,6 +16,10 @@
 
 #include "render/egl.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // mesa ships old GL headers that don't include this type, so for distros that use headers from
 // mesa we need to def it ourselves until they update.
 // https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/23144
@@ -172,5 +176,9 @@ void pop_gles2_debug(struct wlr_gles2_renderer *renderer);
 struct wlr_gles2_render_pass *begin_gles2_buffer_pass(struct wlr_gles2_buffer *buffer,
 	struct wlr_egl_context *prev_ctx, struct wlr_gles2_render_timer *timer,
 	struct wlr_drm_syncobj_timeline *signal_timeline, uint64_t signal_point);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

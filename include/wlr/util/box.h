@@ -18,6 +18,10 @@
 #include <stdbool.h>
 #include <wayland-server-protocol.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * A box representing a rectangle region in a 2D space.
  *
@@ -117,6 +121,10 @@ bool wlr_box_equal(const struct wlr_box *a, const struct wlr_box *b);
  */
 bool wlr_fbox_equal(const struct wlr_fbox *a, const struct wlr_fbox *b);
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

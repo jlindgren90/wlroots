@@ -14,6 +14,10 @@
 #include <time.h>
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_xwayland_server_options {
 	bool lazy;
 	bool enable_wm;
@@ -64,5 +68,9 @@ struct wlr_xwayland_server_ready_event {
 struct wlr_xwayland_server *wlr_xwayland_server_create(
 	struct wl_display *display, struct wlr_xwayland_server_options *options);
 void wlr_xwayland_server_destroy(struct wlr_xwayland_server *server);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -12,6 +12,10 @@
 #include <wlr/util/addon.h>
 #include "util/rect_union.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_vk_descriptor_pool;
 struct wlr_vk_texture;
 
@@ -542,6 +546,10 @@ void vulkan_change_layout(VkCommandBuffer cb, VkImage img,
 #define wlr_vk_error(fmt, res, ...) wlr_log(WLR_ERROR, fmt ": %s (%d)", \
 	vulkan_strerror(res), res, ##__VA_ARGS__)
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif // RENDER_VULKAN_H

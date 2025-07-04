@@ -28,6 +28,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct xcursor_image {
 	uint32_t version; /* version of the image data */
 	uint32_t size; /* nominal size for matching */
@@ -55,4 +59,9 @@ void
 xcursor_load_theme(const char *theme, int size,
 		   void (*load_callback)(struct xcursor_images *, void *),
 		   void *user_data);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

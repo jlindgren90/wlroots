@@ -14,6 +14,10 @@
 #include <wlr/types/wlr_buffer.h>
 #include <wlr/util/box.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_screencopy_manager_v1 {
 	struct wl_global *global;
 	struct wl_list frames; // wlr_screencopy_frame_v1.link
@@ -63,5 +67,9 @@ struct wlr_screencopy_frame_v1 {
 
 struct wlr_screencopy_manager_v1 *wlr_screencopy_manager_v1_create(
 	struct wl_display *display);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

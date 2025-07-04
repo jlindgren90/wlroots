@@ -14,6 +14,10 @@
 #include <wlr/types/wlr_output.h>
 #include <wlr/util/addon.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_box;
 
 /**
@@ -162,5 +166,9 @@ struct wlr_output *wlr_output_layout_adjacent_output(
 struct wlr_output *wlr_output_layout_farthest_output(
 	struct wlr_output_layout *layout, enum wlr_direction direction,
 	struct wlr_output *reference, double ref_lx, double ref_ly);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

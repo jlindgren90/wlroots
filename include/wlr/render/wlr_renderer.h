@@ -15,6 +15,10 @@
 #include <wlr/render/wlr_texture.h>
 #include <wlr/util/box.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_backend;
 struct wlr_renderer_impl;
 struct wlr_drm_format_set;
@@ -121,5 +125,9 @@ int wlr_render_timer_get_duration_ns(struct wlr_render_timer *timer);
  * Destroy the render timer.
  */
 void wlr_render_timer_destroy(struct wlr_render_timer *timer);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

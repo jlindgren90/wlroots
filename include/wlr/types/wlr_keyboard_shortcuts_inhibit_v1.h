@@ -12,6 +12,10 @@
 #include <wayland-server-core.h>
 #include <wlr/types/wlr_seat.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* This interface permits clients to inhibit keyboard shortcut processing by
  * the compositor.
  *
@@ -85,5 +89,9 @@ void wlr_keyboard_shortcuts_inhibitor_v1_activate(
 
 void wlr_keyboard_shortcuts_inhibitor_v1_deactivate(
 	struct wlr_keyboard_shortcuts_inhibitor_v1 *inhibitor);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -13,6 +13,10 @@
 
 #include <wlr/render/wlr_renderer.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_egl;
 
 /**
@@ -47,5 +51,9 @@ bool wlr_render_timer_is_gles2(struct wlr_render_timer *timer);
 bool wlr_texture_is_gles2(struct wlr_texture *texture);
 void wlr_gles2_texture_get_attribs(struct wlr_texture *texture,
 	struct wlr_gles2_texture_attribs *attribs);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

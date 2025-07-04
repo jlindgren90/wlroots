@@ -4,6 +4,10 @@
 #include <stdbool.h>
 #include <unistd.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Parse a bool from an environment variable.
  *
@@ -19,5 +23,9 @@ bool env_parse_bool(const char *option);
  * switches is a NULL-terminated array.
  */
 size_t env_parse_switch(const char *option, const char **switches);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

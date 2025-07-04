@@ -7,6 +7,10 @@
 #include <wlr/backend.h>
 #include <wlr/types/wlr_output.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_input_device;
 
 /**
@@ -72,5 +76,9 @@ void wlr_wl_output_set_app_id(struct wlr_output *output, const char *app_id);
  * Returns the remote struct wl_surface used by the Wayland output.
  */
 struct wl_surface *wlr_wl_output_get_surface(struct wlr_output *output);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

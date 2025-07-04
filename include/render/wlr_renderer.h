@@ -3,6 +3,10 @@
 
 #include <wlr/render/wlr_renderer.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Automatically select and create a renderer suitable for the DRM FD.
  */
@@ -13,5 +17,9 @@ struct wlr_renderer *renderer_autocreate_with_drm_fd(int drm_fd);
  */
 const struct wlr_drm_format_set *wlr_renderer_get_render_formats(
 	struct wlr_renderer *renderer);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

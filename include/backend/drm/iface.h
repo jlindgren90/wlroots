@@ -7,6 +7,10 @@
 #include <xf86drm.h>
 #include <xf86drmMode.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_drm_backend;
 struct wlr_drm_connector;
 struct wlr_drm_crtc;
@@ -39,5 +43,9 @@ bool drm_atomic_connector_prepare(struct wlr_drm_connector_state *state,
 	bool modeset);
 void drm_atomic_connector_apply_commit(struct wlr_drm_connector_state *state);
 void drm_atomic_connector_rollback_commit(struct wlr_drm_connector_state *state);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -4,8 +4,16 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int create_shm_file(void);
 int allocate_shm_file(size_t size);
 bool allocate_shm_file_pair(size_t size, int *rw_fd, int *ro_fd);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

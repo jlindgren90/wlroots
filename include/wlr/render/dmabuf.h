@@ -12,6 +12,10 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define WLR_DMABUF_MAX_PLANES 4
 
 /**
@@ -51,5 +55,9 @@ void wlr_dmabuf_attributes_finish(struct wlr_dmabuf_attributes *attribs);
  */
 bool wlr_dmabuf_attributes_copy(struct wlr_dmabuf_attributes *dst,
 	const struct wlr_dmabuf_attributes *src);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

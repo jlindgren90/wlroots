@@ -16,6 +16,10 @@
 #include <wlr/render/drm_format_set.h>
 #include <wlr/render/drm_syncobj.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_wl_backend {
 	struct wlr_backend backend;
 
@@ -213,5 +217,9 @@ void destroy_wl_drm_syncobj_timeline(struct wlr_wl_drm_syncobj_timeline *timelin
 extern const struct wlr_pointer_impl wl_pointer_impl;
 extern const struct wlr_tablet_pad_impl wl_tablet_pad_impl;
 extern const struct wlr_tablet_impl wl_tablet_impl;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

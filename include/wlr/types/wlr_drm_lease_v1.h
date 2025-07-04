@@ -11,6 +11,10 @@
 
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_backend;
 struct wlr_output;
 
@@ -148,5 +152,9 @@ void wlr_drm_lease_request_v1_reject(struct wlr_drm_lease_request_v1 *request);
  * lease until withdrawn by the compositor.
  */
 void wlr_drm_lease_v1_revoke(struct wlr_drm_lease_v1 *lease);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

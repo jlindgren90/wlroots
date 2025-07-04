@@ -15,6 +15,10 @@
 #include <wlr/util/box.h>
 #include "xdg-shell-protocol.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_xdg_shell {
 	struct wl_global *global;
 	uint32_t version;
@@ -579,5 +583,9 @@ void wlr_xdg_surface_for_each_popup_surface(struct wlr_xdg_surface *surface,
  * extending the shell.
  */
 uint32_t wlr_xdg_surface_schedule_configure(struct wlr_xdg_surface *surface);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

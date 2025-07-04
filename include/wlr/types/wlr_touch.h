@@ -13,6 +13,10 @@
 #include <wlr/types/wlr_input_device.h>
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_touch_impl;
 
 struct wlr_touch {
@@ -69,5 +73,9 @@ struct wlr_touch_cancel_event {
  */
 struct wlr_touch *wlr_touch_from_input_device(
 	struct wlr_input_device *input_device);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

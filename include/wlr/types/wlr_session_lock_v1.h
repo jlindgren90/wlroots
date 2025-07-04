@@ -14,6 +14,10 @@
 #include <wayland-server-core.h>
 #include <wlr/types/wlr_compositor.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_session_lock_manager_v1 {
 	struct wl_global *global;
 
@@ -104,5 +108,9 @@ uint32_t wlr_session_lock_surface_v1_configure(
  */
 struct wlr_session_lock_surface_v1 *wlr_session_lock_surface_v1_try_from_wlr_surface(
 	struct wlr_surface *surface);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -14,6 +14,10 @@
 #include <time.h>
 #include "ext-image-copy-capture-v1-protocol.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_renderer;
 
 struct wlr_ext_image_copy_capture_manager_v1 {
@@ -61,5 +65,9 @@ void wlr_ext_image_copy_capture_frame_v1_fail(struct wlr_ext_image_copy_capture_
  */
 bool wlr_ext_image_copy_capture_frame_v1_copy_buffer(struct wlr_ext_image_copy_capture_frame_v1 *frame,
 	struct wlr_buffer *src, struct wlr_renderer *renderer);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

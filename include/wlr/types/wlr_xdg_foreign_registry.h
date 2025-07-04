@@ -11,6 +11,10 @@
 
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define WLR_XDG_FOREIGN_HANDLE_SIZE 37
 
 /**
@@ -74,5 +78,9 @@ struct wlr_xdg_foreign_exported *wlr_xdg_foreign_registry_find_by_handle(
  * Remove the given surface from the registry it was previously added in.
  */
 void wlr_xdg_foreign_exported_finish(struct wlr_xdg_foreign_exported *surface);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

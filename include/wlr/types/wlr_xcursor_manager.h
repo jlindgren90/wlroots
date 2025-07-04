@@ -12,6 +12,10 @@
 #include <wayland-server-core.h>
 #include <wlr/xcursor.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * An XCursor theme at a particular scale factor of the base size.
  */
@@ -55,5 +59,9 @@ bool wlr_xcursor_manager_load(struct wlr_xcursor_manager *manager,
  */
 struct wlr_xcursor *wlr_xcursor_manager_get_xcursor(
 	struct wlr_xcursor_manager *manager, const char *name, float scale);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

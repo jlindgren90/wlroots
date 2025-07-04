@@ -13,6 +13,10 @@
 #include <wlr/types/wlr_seat.h>
 #include <wlr/util/box.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_surface;
 
 enum wlr_text_input_v3_features {
@@ -99,5 +103,9 @@ void wlr_text_input_v3_send_delete_surrounding_text(
 	struct wlr_text_input_v3 *text_input, uint32_t before_length,
 	uint32_t after_length);
 void wlr_text_input_v3_send_done(struct wlr_text_input_v3 *text_input);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -5,6 +5,10 @@
 #include <wlr/backend/interface.h>
 #include <wlr/backend/multi.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_multi_backend {
 	struct wlr_backend backend;
 
@@ -17,5 +21,9 @@ struct wlr_multi_backend {
 		struct wl_signal backend_remove;
 	} events;
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

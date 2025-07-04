@@ -5,6 +5,10 @@
 #include <xcb/xfixes.h>
 #include <wayland-util.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define INCR_CHUNK_SIZE (64 * 1024)
 
 #define XDND_VERSION 5
@@ -91,5 +95,9 @@ void xwm_seat_handle_start_drag(struct wlr_xwm *xwm, struct wlr_drag *drag);
 void xwm_selection_init(struct wlr_xwm_selection *selection,
 	struct wlr_xwm *xwm, xcb_atom_t atom);
 void xwm_selection_finish(struct wlr_xwm_selection *selection);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

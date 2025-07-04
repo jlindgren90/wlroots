@@ -14,6 +14,10 @@
 #include <wlr/render/dmabuf.h>
 #include <wlr/util/addon.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_buffer;
 struct wlr_renderer;
 
@@ -205,5 +209,9 @@ struct wlr_single_pixel_buffer_v1 {
  */
 struct wlr_single_pixel_buffer_v1 *wlr_single_pixel_buffer_v1_try_from_buffer(
 	struct wlr_buffer *buffer);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -4,6 +4,10 @@
 #include <wlr/render/drm_format_set.h>
 #include <wlr/types/wlr_output.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void output_pending_resolution(struct wlr_output *output,
 	const struct wlr_output_state *state, int *width, int *height);
 bool output_pending_enabled(struct wlr_output *output,
@@ -31,5 +35,9 @@ void output_state_get_buffer_src_box(const struct wlr_output_state *state,
 	struct wlr_fbox *out);
 void output_state_get_buffer_dst_box(const struct wlr_output_state *state,
 	struct wlr_box *out);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
