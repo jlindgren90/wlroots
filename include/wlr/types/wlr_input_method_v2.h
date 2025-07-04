@@ -14,6 +14,7 @@
 #include <wlr/util/box.h>
 
 #ifdef __cplusplus
+#define delete delete_
 extern "C" {
 #endif
 
@@ -152,6 +153,7 @@ void wlr_input_method_keyboard_grab_v2_destroy(
 
 #ifdef __cplusplus
 }
+#undef delete
 #endif
 
 #endif

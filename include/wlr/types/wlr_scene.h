@@ -32,6 +32,12 @@
 extern "C" {
 #endif
 
+#ifdef __cplusplus
+#define WLR_SCENE_COLOR_ARG  const float color[]
+#else
+#define WLR_SCENE_COLOR_ARG  const float color[static 4]
+#endif
+
 struct wlr_output;
 struct wlr_output_layout;
 struct wlr_output_layout_output;
@@ -426,7 +432,7 @@ struct wlr_scene_surface *wlr_scene_surface_try_from_buffer(
  * The color argument must be a premultiplied color value.
  */
 struct wlr_scene_rect *wlr_scene_rect_create(struct wlr_scene_tree *parent,
-		int width, int height, const float color[static 4]);
+		int width, int height, WLR_SCENE_COLOR_ARG);
 
 /**
  * Change the width and height of an existing rectangle node.
@@ -438,7 +444,7 @@ void wlr_scene_rect_set_size(struct wlr_scene_rect *rect, int width, int height)
  *
  * The color argument must be a premultiplied color value.
  */
-void wlr_scene_rect_set_color(struct wlr_scene_rect *rect, const float color[static 4]);
+void wlr_scene_rect_set_color(struct wlr_scene_rect *rect, WLR_SCENE_COLOR_ARG);
 
 /**
  * Add a node displaying a buffer to the scene-graph.
