@@ -11,6 +11,10 @@
 
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_xdg_system_bell_v1 {
 	struct wl_global *global;
 
@@ -31,5 +35,9 @@ struct wlr_xdg_system_bell_v1_ring_event {
 
 struct wlr_xdg_system_bell_v1 *wlr_xdg_system_bell_v1_create(struct wl_display *display,
 		uint32_t version);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

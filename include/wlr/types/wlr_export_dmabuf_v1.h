@@ -13,6 +13,10 @@
 #include <wayland-server-core.h>
 #include <wlr/render/dmabuf.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_export_dmabuf_manager_v1 {
 	struct wl_global *global;
 	struct wl_list frames; // wlr_export_dmabuf_frame_v1.link
@@ -43,5 +47,9 @@ struct wlr_export_dmabuf_frame_v1 {
 
 struct wlr_export_dmabuf_manager_v1 *wlr_export_dmabuf_manager_v1_create(
 	struct wl_display *display);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

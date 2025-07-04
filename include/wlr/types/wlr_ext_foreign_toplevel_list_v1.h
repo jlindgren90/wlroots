@@ -11,6 +11,10 @@
 
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_ext_foreign_toplevel_list_v1 {
 	struct wl_global *global;
 	struct wl_list resources; // wl_resource_get_link()
@@ -68,5 +72,9 @@ void wlr_ext_foreign_toplevel_handle_v1_update_state(
 
 struct wlr_ext_foreign_toplevel_handle_v1 *wlr_ext_foreign_toplevel_handle_v1_from_resource(
 	struct wl_resource *resource);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

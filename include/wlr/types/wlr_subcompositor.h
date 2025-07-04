@@ -14,6 +14,10 @@
 #include <wayland-server-core.h>
 #include <wlr/types/wlr_compositor.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * The sub-surface state describing the sub-surface's relationship with its
  * parent. Contrary to other states, this one is not applied on surface commit.
@@ -77,5 +81,9 @@ struct wlr_subsurface *wlr_subsurface_try_from_wlr_surface(
 	struct wlr_surface *surface);
 
 struct wlr_subcompositor *wlr_subcompositor_create(struct wl_display *display);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

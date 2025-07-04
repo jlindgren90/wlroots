@@ -6,6 +6,10 @@
 #include <wlr/render/dmabuf.h>
 #include <wlr/types/wlr_buffer.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_gbm_buffer {
 	struct wlr_buffer base;
 
@@ -30,5 +34,9 @@ struct wlr_gbm_allocator {
  * Takes ownership over the FD.
  */
 struct wlr_allocator *wlr_gbm_allocator_create(int drm_fd);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

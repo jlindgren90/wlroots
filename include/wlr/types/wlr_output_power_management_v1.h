@@ -4,6 +4,10 @@
 #include <wayland-server-core.h>
 #include "wlr-output-power-management-unstable-v1-protocol.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_output_power_manager_v1 {
 	struct wl_global *global;
 	struct wl_list output_powers; // wlr_output_power_v1.link
@@ -41,5 +45,9 @@ struct wlr_output_power_v1_set_mode_event {
 
 struct wlr_output_power_manager_v1 *wlr_output_power_manager_v1_create(
 	struct wl_display *display);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

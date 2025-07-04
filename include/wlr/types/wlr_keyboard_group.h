@@ -12,6 +12,10 @@
 #include <wayland-server-core.h>
 #include <wlr/types/wlr_keyboard.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_keyboard_group {
 	struct wlr_keyboard keyboard;
 	struct wl_list devices; // keyboard_group_device.link
@@ -55,5 +59,9 @@ void wlr_keyboard_group_remove_keyboard(struct wlr_keyboard_group *group,
 		struct wlr_keyboard *keyboard);
 
 void wlr_keyboard_group_destroy(struct wlr_keyboard_group *group);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

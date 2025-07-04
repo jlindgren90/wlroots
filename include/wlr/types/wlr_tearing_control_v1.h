@@ -16,6 +16,10 @@
 
 #include "tearing-control-v1-protocol.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_tearing_control_v1 {
 	struct wl_client *client;
 	struct wl_list link;
@@ -66,5 +70,9 @@ enum wp_tearing_control_v1_presentation_hint
 wlr_tearing_control_manager_v1_surface_hint_from_surface(
 	struct wlr_tearing_control_manager_v1 *manager,
 	struct wlr_surface *surface);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

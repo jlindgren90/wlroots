@@ -11,6 +11,10 @@
 
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_xdg_activation_token_v1 {
 	struct wlr_xdg_activation_v1 *activation;
 	// The source surface that created the token.
@@ -84,5 +88,9 @@ const char *wlr_xdg_activation_token_v1_get_name(
 // Add a token to the pool of known tokens
 struct wlr_xdg_activation_token_v1 *wlr_xdg_activation_v1_add_token(
 		struct wlr_xdg_activation_v1 *activation, const char *token_str);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

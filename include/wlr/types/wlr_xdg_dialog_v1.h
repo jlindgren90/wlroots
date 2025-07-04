@@ -12,6 +12,10 @@
 #include <wayland-server-core.h>
 #include <wlr/util/addon.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_xdg_dialog_v1 {
 	struct wl_resource *resource;
 	struct wlr_xdg_toplevel *xdg_toplevel;
@@ -54,5 +58,9 @@ struct wlr_xdg_wm_dialog_v1 *wlr_xdg_wm_dialog_v1_create(struct wl_display *disp
  */
 struct wlr_xdg_dialog_v1 *wlr_xdg_dialog_v1_try_from_wlr_xdg_toplevel(
 		struct wlr_xdg_toplevel *xdg_toplevel);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

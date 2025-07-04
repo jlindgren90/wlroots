@@ -11,6 +11,10 @@
 
 #include <wlr/types/wlr_buffer.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_buffer_impl {
 	void (*destroy)(struct wlr_buffer *buffer);
 	bool (*get_dmabuf)(struct wlr_buffer *buffer,
@@ -49,5 +53,9 @@ void wlr_buffer_finish(struct wlr_buffer *buffer);
  */
 void wlr_buffer_register_resource_interface(
 	const struct wlr_buffer_resource_interface *iface);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -1,6 +1,10 @@
 #ifndef _CAT_H
 #define _CAT_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct gimp_texture {
   unsigned int 	 width;
   unsigned int 	 height;
@@ -9,5 +13,9 @@ struct gimp_texture {
 };
 
 extern const struct gimp_texture cat_tex;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

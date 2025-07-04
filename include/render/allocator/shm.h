@@ -4,6 +4,10 @@
 #include <wlr/render/allocator.h>
 #include <wlr/types/wlr_buffer.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_shm_buffer {
 	struct wlr_buffer base;
 	struct wlr_shm_attributes shm;
@@ -19,5 +23,9 @@ struct wlr_shm_allocator {
  * Creates a new shared memory allocator.
  */
 struct wlr_allocator *wlr_shm_allocator_create(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -3,6 +3,10 @@
 
 #include <wlr/types/wlr_input_device.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Initializes a given wlr_input_device. Allocates memory for the name and sets
  * its vendor and product id to 0.
@@ -16,5 +20,9 @@ void wlr_input_device_init(struct wlr_input_device *wlr_device,
  * the destroy event.
  */
 void wlr_input_device_finish(struct wlr_input_device *wlr_device);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

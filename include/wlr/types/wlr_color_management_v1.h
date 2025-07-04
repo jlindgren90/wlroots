@@ -14,6 +14,10 @@
 
 #include "color-management-v1-protocol.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_surface;
 
 struct wlr_image_description_v1_data {
@@ -88,5 +92,9 @@ wlr_surface_get_image_description_v1_data(struct wlr_surface *surface);
 void wlr_color_manager_v1_set_surface_preferred_image_description(
 	struct wlr_color_manager_v1 *manager, struct wlr_surface *surface,
 	const struct wlr_image_description_v1_data *data);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

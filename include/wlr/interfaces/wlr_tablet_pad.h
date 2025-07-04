@@ -11,6 +11,10 @@
 
 #include <wlr/types/wlr_tablet_pad.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_tablet_pad_impl {
 	const char *name;
 };
@@ -26,5 +30,9 @@ void wlr_tablet_pad_init(struct wlr_tablet_pad *pad,
  * it.
  */
 void wlr_tablet_pad_finish(struct wlr_tablet_pad *pad);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

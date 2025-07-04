@@ -14,6 +14,10 @@
 #include <wayland-server-core.h>
 #include <wlr/util/box.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_renderer;
 struct wlr_buffer;
 
@@ -144,5 +148,9 @@ struct wlr_render_rect_options {
  */
 void wlr_render_pass_add_rect(struct wlr_render_pass *render_pass,
 	const struct wlr_render_rect_options *options);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

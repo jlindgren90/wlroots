@@ -11,6 +11,10 @@
 
 #include <wlr/types/wlr_switch.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_switch_impl {
 	const char *name;
 };
@@ -18,5 +22,9 @@ struct wlr_switch_impl {
 void wlr_switch_init(struct wlr_switch *switch_device,
 	const struct wlr_switch_impl *impl, const char *name);
 void wlr_switch_finish(struct wlr_switch *switch_device);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

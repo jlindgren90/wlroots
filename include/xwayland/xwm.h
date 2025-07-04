@@ -12,6 +12,10 @@
 #include <xcb/xcb_errors.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* This is in xcb/xcb_event.h, but pulling xcb-util just for a constant
  * others redefine anyway is meh
  */
@@ -185,5 +189,9 @@ xcb_void_cookie_t xwm_send_event_with_size(xcb_connection_t *c,
 	uint32_t event_mask, const void *event, uint32_t length);
 
 void xwm_schedule_flush(struct wlr_xwm *xwm);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

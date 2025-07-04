@@ -21,6 +21,10 @@
 #include <string.h>
 #include <errno.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum wlr_log_importance {
 	WLR_SILENT = 0,
 	WLR_ERROR = 1,
@@ -81,6 +85,10 @@ void _wlr_vlog(enum wlr_log_importance verbosity, const char *format, va_list ar
 #define wlr_log_errno(verb, fmt, ...) \
 	wlr_log(verb, fmt ": %s", ##__VA_ARGS__, strerror(errno))
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

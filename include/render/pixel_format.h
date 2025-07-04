@@ -3,6 +3,10 @@
 
 #include <wayland-server-protocol.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Information about a pixel format.
  *
@@ -62,5 +66,9 @@ enum wl_shm_format convert_drm_format_to_wl_shm(uint32_t fmt);
  * Return true if the DRM FourCC fmt has an alpha channel, false otherwise.
  */
 bool pixel_format_has_alpha(uint32_t fmt);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

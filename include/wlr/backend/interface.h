@@ -12,6 +12,10 @@
 #include <stdbool.h>
 #include <wlr/backend.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_output_state;
 
 struct wlr_backend_impl {
@@ -34,5 +38,9 @@ void wlr_backend_init(struct wlr_backend *backend,
  * Emit the destroy event and clean up common backend state.
  */
 void wlr_backend_finish(struct wlr_backend *backend);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

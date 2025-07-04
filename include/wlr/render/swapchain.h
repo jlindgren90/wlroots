@@ -5,6 +5,10 @@
 #include <wayland-server-core.h>
 #include <wlr/render/drm_format_set.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define WLR_SWAPCHAIN_CAP 4
 
 struct wlr_swapchain_slot {
@@ -46,5 +50,9 @@ struct wlr_buffer *wlr_swapchain_acquire(struct wlr_swapchain *swapchain);
  */
 bool wlr_swapchain_has_buffer(struct wlr_swapchain *swapchain,
 	struct wlr_buffer *buffer);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -11,6 +11,10 @@
 
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_allocator;
 struct wlr_backend;
 struct wlr_drm_format;
@@ -76,5 +80,9 @@ void wlr_allocator_destroy(struct wlr_allocator *alloc);
  */
 struct wlr_buffer *wlr_allocator_create_buffer(struct wlr_allocator *alloc,
 	int width, int height, const struct wlr_drm_format *format);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

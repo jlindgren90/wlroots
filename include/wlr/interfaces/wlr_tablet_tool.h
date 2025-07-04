@@ -11,6 +11,10 @@
 
 #include <wlr/types/wlr_tablet_tool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_tablet_impl {
 	const char *name;
 };
@@ -18,5 +22,9 @@ struct wlr_tablet_impl {
 void wlr_tablet_init(struct wlr_tablet *tablet,
 	const struct wlr_tablet_impl *impl, const char *name);
 void wlr_tablet_finish(struct wlr_tablet *tablet);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

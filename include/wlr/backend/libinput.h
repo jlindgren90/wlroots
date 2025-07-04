@@ -14,6 +14,10 @@
 #include <wlr/backend.h>
 #include <wlr/backend/session.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_input_device;
 
 struct wlr_backend *wlr_libinput_backend_create(struct wlr_session *session);
@@ -25,5 +29,9 @@ struct libinput_device *wlr_libinput_get_device_handle(
 
 bool wlr_backend_is_libinput(struct wlr_backend *backend);
 bool wlr_input_device_is_libinput(struct wlr_input_device *device);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

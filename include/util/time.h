@@ -1,6 +1,10 @@
 #ifndef UTIL_TIME_H
 #define UTIL_TIME_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <time.h>
 
@@ -31,5 +35,9 @@ void timespec_from_nsec(struct timespec *r, int64_t nsec);
  */
 void timespec_sub(struct timespec *r, const struct timespec *a,
 		const struct timespec *b);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

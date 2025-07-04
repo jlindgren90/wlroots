@@ -14,6 +14,10 @@
 #include <wlr/backend/session.h>
 #include <wlr/types/wlr_output.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_drm_backend;
 typedef struct _drmModeModeInfo drmModeModeInfo;
 
@@ -99,5 +103,9 @@ const drmModeModeInfo *wlr_drm_mode_get_info(struct wlr_output_mode *mode);
  */
 enum wl_output_transform wlr_drm_connector_get_panel_orientation(
 	struct wlr_output *output);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -16,6 +16,10 @@
 #include <wlr/render/dmabuf.h>
 #include <wlr/render/drm_format_set.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_surface;
 
 struct wlr_dmabuf_v1_buffer {
@@ -133,5 +137,9 @@ struct wlr_linux_dmabuf_feedback_v1_init_options {
  */
 bool wlr_linux_dmabuf_feedback_v1_init_with_options(struct wlr_linux_dmabuf_feedback_v1 *feedback,
 	const struct wlr_linux_dmabuf_feedback_v1_init_options *options);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

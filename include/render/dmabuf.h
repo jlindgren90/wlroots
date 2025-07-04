@@ -4,6 +4,10 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Copied from <linux/dma-buf.h> to avoid #ifdef soup
 #define DMA_BUF_SYNC_READ      (1 << 0)
 #define DMA_BUF_SYNC_WRITE     (2 << 0)
@@ -31,5 +35,9 @@ bool dmabuf_import_sync_file(int dmabuf_fd, uint32_t flags, int sync_file_fd);
  * This can be used to make explicit sync interoperate with implicit sync.
  */
 int dmabuf_export_sync_file(int dmabuf_fd, uint32_t flags);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

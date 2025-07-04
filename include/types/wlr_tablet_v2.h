@@ -5,6 +5,10 @@
 #include <wayland-server-core.h>
 #include <wlr/types/wlr_tablet_v2.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_tablet_seat_v2 {
 	struct wl_list link; // wlr_tablet_manager_v2.seats
 	struct wlr_seat *wlr_seat;
@@ -90,5 +94,9 @@ void tablet_seat_client_v2_destroy(struct wl_resource *resource);
 struct wlr_tablet_seat_v2 *get_or_create_tablet_seat(
 	struct wlr_tablet_manager_v2 *manager,
 	struct wlr_seat *wlr_seat);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* TYPES_WLR_TABLET_V2_H */

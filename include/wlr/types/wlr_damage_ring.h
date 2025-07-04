@@ -15,6 +15,10 @@
 #include <pixman.h>
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_box;
 
 struct wlr_damage_ring_buffer {
@@ -75,5 +79,9 @@ void wlr_damage_ring_add_whole(struct wlr_damage_ring *ring);
  */
 void wlr_damage_ring_rotate_buffer(struct wlr_damage_ring *ring,
 	struct wlr_buffer *buffer, pixman_region32_t *damage);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
