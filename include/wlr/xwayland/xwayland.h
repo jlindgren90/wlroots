@@ -17,6 +17,7 @@
 #include <wlr/util/addon.h>
 
 #ifdef __cplusplus
+#define class class_
 extern "C" {
 #endif
 
@@ -419,6 +420,7 @@ xcb_connection_t *wlr_xwayland_get_xwm_connection(
 
 #ifdef __cplusplus
 }
+#undef class
 #endif
 
 #endif

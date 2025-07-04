@@ -17,6 +17,7 @@
 #include "wlr-layer-shell-unstable-v1-protocol.h"
 
 #ifdef __cplusplus
+#define namespace namespace_
 extern "C" {
 #endif
 
@@ -203,6 +204,7 @@ enum wlr_edges wlr_layer_surface_v1_get_exclusive_edge(struct wlr_layer_surface_
 
 #ifdef __cplusplus
 }
+#undef namespace
 #endif
 
 #endif
