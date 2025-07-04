@@ -17,6 +17,10 @@
 #include <wlr/util/addon.h>
 #include <wlr/util/box.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_surface;
 
 enum wlr_surface_state_field {
@@ -575,5 +579,9 @@ struct wlr_compositor *wlr_compositor_create(struct wl_display *display,
  */
 void wlr_compositor_set_renderer(struct wlr_compositor *compositor,
 	struct wlr_renderer *renderer);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

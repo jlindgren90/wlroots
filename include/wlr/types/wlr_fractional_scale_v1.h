@@ -11,6 +11,10 @@
 
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_surface;
 
 struct wlr_fractional_scale_manager_v1 {
@@ -30,5 +34,9 @@ void wlr_fractional_scale_v1_notify_scale(
 
 struct wlr_fractional_scale_manager_v1 *wlr_fractional_scale_manager_v1_create(
 		struct wl_display *display, uint32_t version);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

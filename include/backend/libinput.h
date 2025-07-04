@@ -12,6 +12,10 @@
 #include <wlr/types/wlr_tablet_tool.h>
 #include <wlr/types/wlr_touch.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_libinput_backend {
 	struct wlr_backend backend;
 
@@ -131,5 +135,9 @@ void handle_tablet_pad_ring(struct libinput_event *event,
 	struct wlr_tablet_pad *tablet_pad);
 void handle_tablet_pad_strip(struct libinput_event *event,
 	struct wlr_tablet_pad *tablet_pad);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

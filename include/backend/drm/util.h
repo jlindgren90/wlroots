@@ -5,6 +5,10 @@
 #include <xf86drm.h>
 #include <xf86drmMode.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_drm_connector;
 
 // Calculates a more accurate refresh rate (mHz) than what mode itself provides
@@ -37,5 +41,9 @@ void match_connectors_with_crtcs(size_t num_conns,
 	const uint32_t conns[static restrict num_conns],
 	size_t num_crtcs, const uint32_t prev_crtcs[static restrict num_crtcs],
 	uint32_t new_crtcs[static restrict num_crtcs]);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

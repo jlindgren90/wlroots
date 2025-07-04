@@ -12,6 +12,10 @@
 #include <wayland-server-core.h>
 #include <wlr/types/wlr_seat.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_primary_selection_v1_device_manager {
 	struct wl_global *global;
 	struct wl_list devices; // wlr_primary_selection_v1_device.link
@@ -49,5 +53,9 @@ struct wlr_primary_selection_v1_device {
 
 struct wlr_primary_selection_v1_device_manager *
 	wlr_primary_selection_v1_device_manager_create(struct wl_display *display);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

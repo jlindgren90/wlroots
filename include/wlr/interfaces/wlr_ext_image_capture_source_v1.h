@@ -12,6 +12,10 @@
 #include <wayland-server-core.h>
 #include <wlr/types/wlr_ext_image_capture_source_v1.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_ext_image_copy_capture_frame_v1;
 struct wlr_swapchain;
 struct wlr_renderer;
@@ -41,5 +45,9 @@ bool wlr_ext_image_capture_source_v1_set_constraints_from_swapchain(
 void wlr_ext_image_capture_source_v1_cursor_init(struct wlr_ext_image_capture_source_v1_cursor *source_cursor,
 		const struct wlr_ext_image_capture_source_v1_interface *impl);
 void wlr_ext_image_capture_source_v1_cursor_finish(struct wlr_ext_image_capture_source_v1_cursor *source_cursor);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

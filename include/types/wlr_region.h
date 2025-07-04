@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wl_client;
 
 /*
@@ -10,5 +14,9 @@ struct wl_client;
  */
 struct wl_resource *region_create(struct wl_client *client,
 	uint32_t version, uint32_t id);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

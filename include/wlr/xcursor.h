@@ -44,6 +44,10 @@
 #include <stdint.h>
 #include <wlr/util/edges.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * A still cursor image.
  *
@@ -123,5 +127,9 @@ int wlr_xcursor_frame(struct wlr_xcursor *cursor, uint32_t time);
  * Get the name of the resize cursor for the given edges.
  */
 const char *wlr_xcursor_get_resize_name(enum wlr_edges edges);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

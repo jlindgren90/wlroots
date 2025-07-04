@@ -11,6 +11,10 @@
 
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_single_pixel_buffer_manager_v1 {
 	struct wl_global *global;
 
@@ -22,5 +26,9 @@ struct wlr_single_pixel_buffer_manager_v1 {
 
 struct wlr_single_pixel_buffer_manager_v1 *wlr_single_pixel_buffer_manager_v1_create(
 	struct wl_display *display);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

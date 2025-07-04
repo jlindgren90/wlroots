@@ -11,6 +11,10 @@
 
 #include <wayland-server-protocol.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Returns the transform that, when composed with `tr`, gives
  * `WL_OUTPUT_TRANSFORM_NORMAL`.
@@ -29,5 +33,9 @@ enum wl_output_transform wlr_output_transform_compose(
  * Applies a transform to coordinates.
  */
 void wlr_output_transform_coords(enum wl_output_transform tr, int *x, int *y);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

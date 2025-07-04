@@ -13,6 +13,10 @@
 #include <wayland-server-core.h>
 #include <wlr/types/wlr_output.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_output_manager_v1 {
 	struct wl_display *display;
 	struct wl_global *global;
@@ -171,5 +175,9 @@ void wlr_output_head_v1_state_apply(
  */
 struct wlr_backend_output_state *wlr_output_configuration_v1_build_state(
 	const struct wlr_output_configuration_v1 *config, size_t *states_len);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

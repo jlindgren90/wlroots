@@ -15,6 +15,10 @@
 #include <wlr/types/wlr_keyboard.h>
 #include <wlr/types/wlr_pointer.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_surface;
 
 #define WLR_SERIAL_RINGSET_SIZE 128
@@ -761,5 +765,9 @@ struct wlr_seat_client *wlr_seat_client_from_pointer_resource(
  * Check whether a surface has bound to touch events.
  */
 bool wlr_surface_accepts_touch(struct wlr_surface *surface, struct wlr_seat *wlr_seat);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

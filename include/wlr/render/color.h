@@ -12,6 +12,10 @@
 #include <stdbool.h>
 #include <sys/types.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Well-known color primaries.
  */
@@ -88,5 +92,9 @@ struct wlr_color_transform *wlr_color_transform_ref(struct wlr_color_transform *
  * all associated resources when the reference count hits zero.
  */
 void wlr_color_transform_unref(struct wlr_color_transform *tr);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

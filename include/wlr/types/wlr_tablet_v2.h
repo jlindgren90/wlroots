@@ -14,6 +14,10 @@
 
 #include "tablet-v2-protocol.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* This can probably be even lower,the tools don't have a lot of buttons */
 #define WLR_TABLET_V2_TOOL_BUTTONS_CAP 16
 
@@ -337,4 +341,9 @@ void wlr_tablet_v2_start_grab(struct wlr_tablet_v2_tablet_pad *pad, struct wlr_t
 
 bool wlr_surface_accepts_tablet_v2(struct wlr_surface *surface,
 		struct wlr_tablet_v2_tablet *tablet);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* WLR_TYPES_WLR_TABLET_V2_H */

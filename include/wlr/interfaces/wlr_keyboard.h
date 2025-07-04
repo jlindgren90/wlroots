@@ -12,6 +12,10 @@
 #include <stdint.h>
 #include <wlr/types/wlr_keyboard.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_keyboard_impl {
 	const char *name;
 	void (*led_update)(struct wlr_keyboard *keyboard, uint32_t leds);
@@ -30,5 +34,9 @@ void wlr_keyboard_notify_key(struct wlr_keyboard *keyboard,
 void wlr_keyboard_notify_modifiers(struct wlr_keyboard *keyboard,
 		uint32_t mods_depressed, uint32_t mods_latched, uint32_t mods_locked,
 		uint32_t group);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -3,6 +3,10 @@
 
 #include <wayland-server-protocol.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_box;
 
 /** Writes the identity matrix into mat */
@@ -45,5 +49,9 @@ void matrix_projection(float mat[static 9], int width, int height,
  * The matrix needs to be inversible.
  */
 void matrix_invert(float out[static 9], float m[static 9]);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

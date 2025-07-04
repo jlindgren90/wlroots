@@ -13,6 +13,10 @@
 #include <stddef.h>
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_surface;
 
 struct wlr_output;
@@ -105,5 +109,9 @@ void wlr_presentation_surface_textured_on_output(struct wlr_surface *surface,
  */
 void wlr_presentation_surface_scanned_out_on_output(struct wlr_surface *surface,
 	struct wlr_output *output);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

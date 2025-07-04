@@ -12,6 +12,10 @@
 #include <wayland-server-core.h>
 #include <wlr/types/wlr_output.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_foreign_toplevel_manager_v1 {
 	struct wl_event_loop *event_loop;
 	struct wl_global *global;
@@ -151,5 +155,8 @@ void wlr_foreign_toplevel_handle_v1_set_parent(
 	struct wlr_foreign_toplevel_handle_v1 *toplevel,
 	struct wlr_foreign_toplevel_handle_v1 *parent);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

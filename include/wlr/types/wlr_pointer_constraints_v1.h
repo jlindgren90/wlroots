@@ -16,6 +16,10 @@
 #include <wlr/types/wlr_seat.h>
 #include "pointer-constraints-unstable-v1-protocol.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_seat;
 
 enum wlr_pointer_constraint_v1_type {
@@ -104,5 +108,9 @@ void wlr_pointer_constraint_v1_send_activated(
  */
 void wlr_pointer_constraint_v1_send_deactivated(
 	struct wlr_pointer_constraint_v1 *constraint);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

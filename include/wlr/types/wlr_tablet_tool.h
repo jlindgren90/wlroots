@@ -13,6 +13,10 @@
 #include <wayland-server-core.h>
 #include <wlr/types/wlr_input_device.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * Copy+Paste from libinput, but this should neither use libinput, nor
  * tablet-v2 headers, so we can't include them
@@ -151,5 +155,9 @@ struct wlr_tablet_tool_button_event {
  */
 struct wlr_tablet *wlr_tablet_from_input_device(
 	struct wlr_input_device *input_device);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

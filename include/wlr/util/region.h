@@ -20,6 +20,10 @@
 #include <pixman.h>
 #include <wayland-server-protocol.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Scale a region by the specified factor.
  *
@@ -73,5 +77,9 @@ void wlr_region_rotated_bounds(pixman_region32_t *dst, const pixman_region32_t *
  */
 bool wlr_region_confine(const pixman_region32_t *region, double x1, double y1, double x2,
 	double y2, double *x2_out, double *y2_out);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

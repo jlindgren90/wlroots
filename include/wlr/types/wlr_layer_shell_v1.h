@@ -16,6 +16,10 @@
 #include <wlr/util/edges.h>
 #include "wlr-layer-shell-unstable-v1-protocol.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * wlr_layer_shell_v1 allows clients to arrange themselves in "layers" on the
  * desktop in accordance with the wlr-layer-shell protocol. When a client is
@@ -196,5 +200,9 @@ struct wlr_layer_surface_v1 *wlr_layer_surface_v1_from_resource(
  * Returns WLR_EDGE_NONE if the exclusive zone is nonpositive or must not be applied.
  */
 enum wlr_edges wlr_layer_surface_v1_get_exclusive_edge(struct wlr_layer_surface_v1 *surface);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

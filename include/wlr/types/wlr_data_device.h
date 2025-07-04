@@ -12,6 +12,10 @@
 #include <wayland-server-core.h>
 #include <wlr/types/wlr_seat.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_data_device_manager {
 	struct wl_global *global;
 	struct wl_list data_sources;
@@ -260,5 +264,9 @@ void wlr_data_source_dnd_finish(struct wlr_data_source *source);
  */
 void wlr_data_source_dnd_action(struct wlr_data_source *source,
 	enum wl_data_device_manager_dnd_action action);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

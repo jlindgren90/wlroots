@@ -15,6 +15,10 @@
 #include <wlr/render/dmabuf.h>
 #include <wlr/util/box.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_buffer;
 struct wlr_renderer;
 struct wlr_texture_impl;
@@ -81,5 +85,9 @@ void wlr_texture_destroy(struct wlr_texture *texture);
  */
 struct wlr_texture *wlr_texture_from_buffer(struct wlr_renderer *renderer,
 	struct wlr_buffer *buffer);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

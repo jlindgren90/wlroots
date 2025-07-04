@@ -13,6 +13,10 @@
 #include <wlr/types/wlr_seat.h>
 #include <wlr/util/box.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_input_method_v2_preedit_string {
 	char *text;
 	int32_t cursor_begin;
@@ -145,5 +149,9 @@ void wlr_input_method_keyboard_grab_v2_set_keyboard(
 	struct wlr_keyboard *keyboard);
 void wlr_input_method_keyboard_grab_v2_destroy(
 	struct wlr_input_method_keyboard_grab_v2 *keyboard_grab);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

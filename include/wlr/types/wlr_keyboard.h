@@ -16,6 +16,10 @@
 #include <wlr/types/wlr_input_device.h>
 #include <xkbcommon/xkbcommon.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define WLR_LED_COUNT 3
 
 enum wlr_keyboard_led {
@@ -155,5 +159,9 @@ void wlr_keyboard_led_update(struct wlr_keyboard *keyboard, uint32_t leds);
  * A bitmask of enum wlr_keyboard_modifier is returned.
  */
 uint32_t wlr_keyboard_get_modifiers(struct wlr_keyboard *keyboard);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

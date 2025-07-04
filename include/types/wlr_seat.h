@@ -4,6 +4,10 @@
 #include <wayland-server-core.h>
 #include <wlr/types/wlr_seat.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern const struct wlr_pointer_grab_interface default_pointer_grab_impl;
 extern const struct wlr_keyboard_grab_interface default_keyboard_grab_impl;
 extern const struct wlr_touch_grab_interface default_touch_grab_impl;
@@ -29,5 +33,9 @@ void seat_client_create_touch(struct wlr_seat_client *seat_client,
 void seat_client_create_inert_touch(struct wl_client *client,
 		uint32_t version, uint32_t id);
 void seat_client_destroy_touch(struct wl_resource *resource);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -3,6 +3,10 @@
 
 #include <wlr/render/egl.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_egl {
 	EGLDisplay display;
 	EGLContext context;
@@ -116,5 +120,9 @@ void wlr_egl_destroy_sync(struct wlr_egl *egl, EGLSyncKHR sync);
 int wlr_egl_dup_fence_fd(struct wlr_egl *egl, EGLSyncKHR sync);
 
 bool wlr_egl_wait_sync(struct wlr_egl *egl, EGLSyncKHR sync);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

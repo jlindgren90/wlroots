@@ -3,6 +3,10 @@
 
 #include <wlr/types/wlr_buffer.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * A read-only buffer that holds a data pointer.
  *
@@ -64,5 +68,9 @@ struct wlr_client_buffer *wlr_client_buffer_create(struct wlr_buffer *buffer,
  */
 bool wlr_client_buffer_apply_damage(struct wlr_client_buffer *client_buffer,
 	struct wlr_buffer *next, const pixman_region32_t *damage);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

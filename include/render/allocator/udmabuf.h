@@ -4,6 +4,10 @@
 #include <wlr/types/wlr_buffer.h>
 #include <wlr/render/allocator.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_udmabuf_buffer {
 	struct wlr_buffer base;
 
@@ -19,5 +23,9 @@ struct wlr_udmabuf_allocator {
 };
 
 struct wlr_allocator *wlr_udmabuf_allocator_create(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

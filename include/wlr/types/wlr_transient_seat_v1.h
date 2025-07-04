@@ -11,6 +11,10 @@
 
 #include <wayland-server-core.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_seat;
 
 struct wlr_transient_seat_v1 {
@@ -65,5 +69,9 @@ void wlr_transient_seat_v1_ready(struct wlr_transient_seat_v1 *seat,
  * transient seat.
  */
 void wlr_transient_seat_v1_deny(struct wlr_transient_seat_v1 *seat);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* WLR_TYPES_WLR_TRANSIENT_SEAT_V1_H */

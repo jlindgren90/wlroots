@@ -16,6 +16,10 @@
 #include <wlr/types/wlr_output.h>
 #include <wlr/render/dmabuf.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_box;
 struct wlr_fbox;
 
@@ -86,5 +90,9 @@ void wlr_texture_read_pixels_options_get_src_box(
 	const struct wlr_texture *texture, struct wlr_box *box);
 void *wlr_texture_read_pixel_options_get_data(
 	const struct wlr_texture_read_pixels_options *options);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

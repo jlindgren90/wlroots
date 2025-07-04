@@ -14,6 +14,10 @@
 #include <wlr/interfaces/wlr_pointer.h>
 #include <wlr/interfaces/wlr_output.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_virtual_pointer_manager_v1 {
 	struct wl_global *global;
 	struct wl_list virtual_pointers; // wlr_virtual_pointer_v1.link
@@ -48,5 +52,9 @@ struct wlr_virtual_pointer_v1_new_pointer_event {
 
 struct wlr_virtual_pointer_manager_v1* wlr_virtual_pointer_manager_v1_create(
 	struct wl_display *display);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -12,6 +12,10 @@
 #include <wayland-server-core.h>
 #include <wlr/util/addon.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct wlr_buffer;
 struct wlr_surface;
 
@@ -54,5 +58,9 @@ struct wlr_linux_drm_syncobj_surface_v1_state *wlr_linux_drm_syncobj_v1_get_surf
  */
 bool wlr_linux_drm_syncobj_v1_state_signal_release_with_buffer(
 	struct wlr_linux_drm_syncobj_surface_v1_state *state, struct wlr_buffer *buffer);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
